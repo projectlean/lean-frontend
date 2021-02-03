@@ -8,14 +8,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.lean.ui.core.ConstUi;
 import org.lean.ui.layout.LeanGuiLayout;
 
-//@GuiPlugin(description = "The Lean Gui main toolbar")
 public class MainHeader extends HorizontalLayout {
 
     private LeanGuiLayout leanGuiLayout;
 
     public MainHeader(){
-//        leanGui = LeanGui.getInstance();
-//        leanGuiLayout = LeanGuiLayout.getInstance();
 
         setPadding(false);
         setMargin(false);

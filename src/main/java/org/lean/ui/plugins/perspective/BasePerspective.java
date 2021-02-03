@@ -12,7 +12,12 @@ public abstract class BasePerspective extends Composite<HorizontalLayout> implem
 
     public LeanGuiLayout leanGuiLayout;
 
-    public BasePerspective(){ }
+    public BasePerspective(){
+        getContent().setSizeFull();
+        getContent().setMargin(false);
+        getContent().setPadding(false);
+        getContent().setSpacing(false);
+    }
 
     @Override
     public String getPluginId(){

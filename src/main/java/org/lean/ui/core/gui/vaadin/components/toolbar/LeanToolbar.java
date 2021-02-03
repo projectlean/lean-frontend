@@ -1,9 +1,8 @@
-package org.lean.ui.core.gui.components.toolbar;
+package org.lean.ui.core.gui.vaadin.components.toolbar;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.lean.ui.core.ConstUi;

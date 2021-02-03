@@ -25,6 +25,8 @@ hs_err_pid*
 .idea/
 target/
 node_modules/
+config/
+plugins/
 
 package.json 
 pnpmfile.js
