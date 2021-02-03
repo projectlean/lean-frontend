@@ -104,10 +104,10 @@ public class GuiResource {
      * @return the loaded image
      */
     public Image getImage(String location ) {
-        Image img = getImage(location);
+        Image img = new Image(location, "");
         img.setWidth(ConstUi.SMALL_ICON_SIZE_PX);
         img.setHeight(ConstUi.SMALL_ICON_SIZE_PX);
-        return getImage( location, ConstUi.SMALL_ICON_SIZE, ConstUi.SMALL_ICON_SIZE );
+        return img;
     }
 
     /**

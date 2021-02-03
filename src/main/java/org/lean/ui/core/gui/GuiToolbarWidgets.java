@@ -15,7 +15,7 @@ import org.lean.core.gui.plugin.toolbar.GuiToolbarElementType;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarItem;
 import org.lean.ui.core.ConstUi;
 import org.lean.ui.core.PropsUi;
-import org.lean.ui.core.gui.components.toolbar.LeanToolbar;
+import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 
 import java.util.*;
 import java.util.List;

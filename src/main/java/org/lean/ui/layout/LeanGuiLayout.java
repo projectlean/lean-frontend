@@ -14,9 +14,7 @@ import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.core.gui.plugin.key.GuiKeyboardShortcut;
 import org.apache.hop.core.gui.plugin.key.GuiOsxKeyboardShortcut;
 import org.apache.hop.core.variables.IVariables;
-import org.apache.hop.core.variables.Variables;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
-import org.apache.hop.metadata.util.HopMetadataUtil;
 import org.apache.hop.ui.core.metadata.MetadataManager;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElementType;
@@ -24,7 +22,7 @@ import org.lean.core.metadata.LeanMetadataUtil;
 import org.lean.ui.LeanGui;
 import org.lean.ui.core.ConstUi;
 import org.lean.ui.core.gui.GuiToolbarWidgets;
-import org.lean.ui.core.gui.components.toolbar.LeanToolbar;
+import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.delegates.LeanGuiContextDelegate;
 import org.lean.ui.plugins.perspective.*;
 import org.lean.ui.views.MainBody;
@@ -79,8 +77,8 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout{
 
         // TODO: move variables and metadataprovider to singleton
         LeanMetadataUtil leanMetadataUtil = LeanMetadataUtil.getInstance();
-        variables = leanMetadataUtil.getVariables();
-        metadataProvider = leanMetadataUtil.getStandardHopMetadataProvider(variables);
+        variables = leanMetadataUtil.getInstance().variables;
+        metadataProvider = leanMetadataUtil.getInstance().metadataProvider;
 
         getContent().setId("lean-gui-layout");
         getContent().setSizeFull();
