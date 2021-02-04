@@ -35,8 +35,11 @@ public class ConstUi {
         public abstract String getMessage();
     }
 
+    /** What is the default frontend folder? */
+    public static final String LEAN_FRONTEND_FOLDER = "./frontend/images/";
+
     /** What is the path to the Lean logo? */
-    public static final String LEAN_LOGO_PATH = "./frontend/images/lean-logo.svg";
+    public static final String LEAN_LOGO_PATH = LEAN_FRONTEND_FOLDER + "lean-logo.svg";
 
     /** What is the default Lean Logo alt text? */
     public static final String LEAN_LOGO_ALT = "Lean - Lean Enterprise ANalytics";

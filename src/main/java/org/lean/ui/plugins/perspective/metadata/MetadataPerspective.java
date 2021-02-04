@@ -5,7 +5,6 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.metadata.api.HopMetadata;
@@ -58,7 +57,7 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
     private Div metadataTreeDiv, metadataTreeHolderDiv, metadataContentDiv;
 
-    public TreeGrid<String> metadataTree;
+    public TreeGrid<MetadataTreeGridHelper> metadataTree;
 
     public MetadataPerspective(){
         super();
@@ -128,10 +127,9 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         metadataTreeHolderDiv.setId("metadata-treegrid-holder");
         metadataTreeHolderDiv.setSizeFull();
 
-        metadataTree = new TreeGrid<>();
-        metadataTree.addHierarchyColumn(String::valueOf);
+        metadataTree = new TreeGrid<MetadataTreeGridHelper>(MetadataTreeGridHelper.class);
         metadataTree.setHeightFull();
-        // detect level, create 'new' or 'new/edit/delete' context menu.
+        //TODO: detect level, create 'new' or 'new/edit/delete' context menu.
         metadataTree.addItemClickListener(e -> System.out.println("Clicked: " + e.getItem() + " using button " + e.getButton()) );
         metadataTreeHolderDiv.add(metadataTree);
 
@@ -173,16 +171,13 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
     )
     public void refresh(){
 
-        // TODO: ok when initially built, NullPointerException when refreshed because of new instanceId.
-//        metadataTreeHolderDiv.removeAll();
-
-
+        metadataTree.removeAllColumns();
         metadataProvider = LeanMetadataUtil.getInstance().metadataProvider;
         List<Class<IHopMetadata>> metadataClasses = metadataProvider.getMetadataClasses();
         HashMap<String, List<String>> metadataClassMap = new HashMap<>();
 
-        List<String> metadataClassnames = new ArrayList<>();
-        TreeData<String> treeData = new TreeData<>();
+        TreeDataProvider<MetadataTreeGridHelper> metadataDataProvider = (TreeDataProvider<MetadataTreeGridHelper>)metadataTree.getDataProvider();
+        TreeData<MetadataTreeGridHelper> metadataData = metadataDataProvider.getTreeData();
 
         for(Class<IHopMetadata> metadataClass : metadataClasses){
             try {
@@ -190,20 +185,18 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
                 IHopMetadataSerializer<IHopMetadata> serializer = metadataProvider.getSerializer(metadataClass);
                 List<String> names = serializer.listObjectNames();
-                if(metadataClass.getName().equals("org.lean.presentation.connector.LeanConnector")){
-                    names.remove("SteelWheels");
+                MetadataTreeGridHelper metadataTreeGridHelper = new MetadataTreeGridHelper(annotation.name(), annotation.image(), metadataClass);
+
+                // add hierarchical data to TreeData (null for parent items, Class<IHopMetadata>)
+                metadataData.addItem(null, metadataTreeGridHelper);
+                for(String name: names){
+                    metadataData.addItem(metadataTreeGridHelper, new MetadataTreeGridHelper(name, null, metadataClass));
                 }
-                metadataClassnames.add(annotation.name());
-                metadataClassMap.put(annotation.name(), names);
 
             }catch(HopException e){
                 e.printStackTrace();
             }
         }
-
-        treeData.addItems(metadataClassnames, metadataItem -> metadataClassMap.get(metadataItem) != null ? metadataClassMap.get(metadataItem) : Collections.emptyList());
-        TreeDataProvider<String> dataProvider = new TreeDataProvider<>(treeData);
-        metadataTree.setDataProvider(dataProvider);
-
+        metadataTree.addComponentHierarchyColumn(MetadataTreeGridHelper::getMetadataComponent);
     }
 }
