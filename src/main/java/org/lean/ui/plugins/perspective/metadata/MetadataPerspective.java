@@ -32,8 +32,8 @@ import java.util.*;
         image = "./frontend/images/perspectives/metadata.svg",
         route = "metadata"
 )
-@Route(value="metadata", layout = LeanGuiLayout.class)
 @GuiPlugin(description = "This perspective allows you to modify different types of metadata")
+@Route(value="metadata", layout = LeanGuiLayout.class)
 public class MetadataPerspective extends BasePerspective implements ILeanPerspective {
 
     private static final String METADATA_PERSPECTIVE_TREE = "Metadata perspective tree";
@@ -57,7 +57,7 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
     private Div metadataTreeDiv, metadataTreeHolderDiv, metadataContentDiv;
 
-    public TreeGrid<String> metadataTree;
+    public TreeGrid<MetadataTreeGridHelper> metadataTree;
 
     public MetadataPerspective(){
         super();
@@ -127,6 +127,12 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         metadataTreeHolderDiv.setId("metadata-treegrid-holder");
         metadataTreeHolderDiv.setSizeFull();
 
+        metadataTree = new TreeGrid<MetadataTreeGridHelper>(MetadataTreeGridHelper.class);
+        metadataTree.setHeightFull();
+        //TODO: detect level, create 'new' or 'new/edit/delete' context menu.
+        metadataTree.addItemClickListener(e -> System.out.println("Clicked: " + e.getItem() + " using button " + e.getButton()) );
+        metadataTreeHolderDiv.add(metadataTree);
+
         metadataTreeDiv.add(toolbar, metadataTreeHolderDiv);
 
         refresh();
@@ -165,20 +171,13 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
     )
     public void refresh(){
 
-        // TODO: ok when initially built, NullPointerException when refreshed because of new instanceId.
-        metadataTreeHolderDiv.removeAll();
-
-        metadataTree = new TreeGrid<>();
-        metadataTree.addHierarchyColumn(String::valueOf);
-        metadataTreeHolderDiv.add(metadataTree);
-        metadataTree.setHeightFull();
-
+        metadataTree.removeAllColumns();
         metadataProvider = LeanMetadataUtil.getInstance().metadataProvider;
         List<Class<IHopMetadata>> metadataClasses = metadataProvider.getMetadataClasses();
         HashMap<String, List<String>> metadataClassMap = new HashMap<>();
 
-        List<String> metadataClassnames = new ArrayList<>();
-        TreeData<String> treeData = new TreeData<>();
+        TreeDataProvider<MetadataTreeGridHelper> metadataDataProvider = (TreeDataProvider<MetadataTreeGridHelper>)metadataTree.getDataProvider();
+        TreeData<MetadataTreeGridHelper> metadataData = metadataDataProvider.getTreeData();
 
         for(Class<IHopMetadata> metadataClass : metadataClasses){
             try {
@@ -186,20 +185,18 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
                 IHopMetadataSerializer<IHopMetadata> serializer = metadataProvider.getSerializer(metadataClass);
                 List<String> names = serializer.listObjectNames();
-                if(metadataClass.getName().equals("org.lean.presentation.connector.LeanConnector")){
-                    names.remove("SteelWheels");
+                MetadataTreeGridHelper metadataTreeGridHelper = new MetadataTreeGridHelper(annotation.name(), annotation.image(), metadataClass);
+
+                // add hierarchical data to TreeData (null for parent items, Class<IHopMetadata>)
+                metadataData.addItem(null, metadataTreeGridHelper);
+                for(String name: names){
+                    metadataData.addItem(metadataTreeGridHelper, new MetadataTreeGridHelper(name, null, metadataClass));
                 }
-                metadataClassnames.add(annotation.name());
-                metadataClassMap.put(annotation.name(), names);
 
             }catch(HopException e){
                 e.printStackTrace();
             }
         }
-
-        treeData.addItems(metadataClassnames, metadataItem -> metadataClassMap.get(metadataItem) != null ? metadataClassMap.get(metadataItem) : Collections.emptyList());
-        TreeDataProvider<String> dataProvider = new TreeDataProvider<>(treeData);
-        metadataTree.setDataProvider(dataProvider);
-
+        metadataTree.addComponentHierarchyColumn(MetadataTreeGridHelper::getMetadataComponent);
     }
 }

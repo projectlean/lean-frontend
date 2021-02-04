@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.database.DatabaseMeta;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.core.gui.plugin.key.GuiKeyboardShortcut;
@@ -36,6 +37,7 @@ import java.util.Objects;
 @CssImport(value = "./styles/toolbar-tabs.css", themeFor = "vaadin-tab")
 @CssImport(value = "./styles/lean-layout.css")
 @GuiPlugin(description = "This is the main Lean UI")
+@VaadinSessionScope
 public class LeanGuiLayout extends Composite<Div> implements RouterLayout{
 
     private static LeanGuiLayout leanGuiLayout;

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.Const;
 import org.lean.core.gui.plugin.GuiRegistry;
@@ -21,6 +22,7 @@ import java.util.*;
 import java.util.List;
 
 /** This class contains the widgets for the GUI elements of a GUI Plugin */
+@VaadinSessionScope
 public class GuiToolbarWidgets extends BaseGuiWidgets {
 
     private Map<String, GuiToolbarItem> guiToolBarMap;
