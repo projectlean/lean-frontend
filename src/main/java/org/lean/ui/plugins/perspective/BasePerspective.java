@@ -4,10 +4,12 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.RoutePrefix;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.lean.ui.LeanGui;
 import org.lean.ui.layout.LeanGuiLayout;
 
+@VaadinSessionScope
 public abstract class BasePerspective extends Composite<HorizontalLayout> implements ILeanPerspective{
 
     public LeanGuiLayout leanGuiLayout;

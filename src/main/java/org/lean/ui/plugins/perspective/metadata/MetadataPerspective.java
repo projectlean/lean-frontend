@@ -5,6 +5,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.metadata.api.HopMetadata;
@@ -32,8 +33,8 @@ import java.util.*;
         image = "./frontend/images/perspectives/metadata.svg",
         route = "metadata"
 )
-@Route(value="metadata", layout = LeanGuiLayout.class)
 @GuiPlugin(description = "This perspective allows you to modify different types of metadata")
+@Route(value="metadata", layout = LeanGuiLayout.class)
 public class MetadataPerspective extends BasePerspective implements ILeanPerspective {
 
     private static final String METADATA_PERSPECTIVE_TREE = "Metadata perspective tree";
@@ -127,6 +128,13 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         metadataTreeHolderDiv.setId("metadata-treegrid-holder");
         metadataTreeHolderDiv.setSizeFull();
 
+        metadataTree = new TreeGrid<>();
+        metadataTree.addHierarchyColumn(String::valueOf);
+        metadataTree.setHeightFull();
+        // detect level, create 'new' or 'new/edit/delete' context menu.
+        metadataTree.addItemClickListener(e -> System.out.println("Clicked: " + e.getItem() + " using button " + e.getButton()) );
+        metadataTreeHolderDiv.add(metadataTree);
+
         metadataTreeDiv.add(toolbar, metadataTreeHolderDiv);
 
         refresh();
@@ -166,12 +174,8 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
     public void refresh(){
 
         // TODO: ok when initially built, NullPointerException when refreshed because of new instanceId.
-        metadataTreeHolderDiv.removeAll();
+//        metadataTreeHolderDiv.removeAll();
 
-        metadataTree = new TreeGrid<>();
-        metadataTree.addHierarchyColumn(String::valueOf);
-        metadataTreeHolderDiv.add(metadataTree);
-        metadataTree.setHeightFull();
 
         metadataProvider = LeanMetadataUtil.getInstance().metadataProvider;
         List<Class<IHopMetadata>> metadataClasses = metadataProvider.getMetadataClasses();
