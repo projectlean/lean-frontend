@@ -1,23 +1,39 @@
 package org.lean.ui.plugins.perspective.metadata;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.grid.contextmenu.GridMenuItem;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.router.Route;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
+import org.apache.hop.core.logging.ILogChannel;
 import org.apache.hop.metadata.api.HopMetadata;
 import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
+import org.apache.hop.ui.core.gui.GuiResource;
 import org.apache.hop.ui.core.metadata.MetadataFileType;
 import org.apache.hop.ui.hopgui.file.empty.EmptyFileType;
+import org.eclipse.swt.custom.CTabItem;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.core.metadata.LeanMetadataUtil;
 import org.lean.ui.context.IGuiContextHandler;
+import org.lean.ui.core.MetadataEditor;
+import org.lean.ui.core.PropsUi;
 import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
+import org.lean.ui.core.metadata.MetadataManager;
 import org.lean.ui.layout.LeanGuiLayout;
 import org.lean.ui.plugins.perspective.BasePerspective;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
@@ -57,6 +73,10 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
     private Div metadataTreeDiv, metadataTreeHolderDiv, metadataContentDiv;
 
+    private Tabs metadataTabs;
+    private Div tabHolderDiv;
+    private Map<Tab, Div> tabsToPages;
+
     public TreeGrid<MetadataTreeGridHelper> metadataTree;
 
     public MetadataPerspective(){
@@ -76,6 +96,21 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         metadataContentDiv = new Div();
         metadataContentDiv.setId("metadata-content");
         metadataContentDiv.setSizeFull();
+
+        metadataTabs = new Tabs();
+        metadataTabs.setOrientation(Tabs.Orientation.HORIZONTAL);
+        tabHolderDiv = new Div();
+        tabHolderDiv.setSizeFull();
+        tabHolderDiv.setId("metadata-tabholder");
+        tabsToPages = new HashMap<>();
+
+        metadataContentDiv.add(metadataTabs, tabHolderDiv);
+        metadataTabs.addSelectedChangeListener(e -> {
+            tabsToPages.values().forEach(page -> page.setVisible(false));
+            Component selectedPage = tabsToPages.get(metadataTabs.getSelectedTab());
+            selectedPage.setVisible(true);
+        });
+
         metadataSplit.setOrientation(SplitLayout.Orientation.HORIZONTAL);
         metadataSplit.addToPrimary(metadataTreeDiv);
         metadataSplit.addToSecondary(metadataContentDiv);
@@ -129,8 +164,6 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
         metadataTree = new TreeGrid<MetadataTreeGridHelper>(MetadataTreeGridHelper.class);
         metadataTree.setHeightFull();
-        //TODO: detect level, create 'new' or 'new/edit/delete' context menu.
-        metadataTree.addItemClickListener(e -> System.out.println("Clicked: " + e.getItem() + " using button " + e.getButton()) );
         metadataTreeHolderDiv.add(metadataTree);
 
         metadataTreeDiv.add(toolbar, metadataTreeHolderDiv);
@@ -138,6 +171,20 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         refresh();
 
     }
+
+    public void onNewMetadata(){
+        Set<MetadataTreeGridHelper> selectedItems = metadataTree.getSelectedItems();
+        System.out.println("Selected items: " + selectedItems.size());
+    }
+
+    public void onNewMetadata(Class<IHopMetadata> metadataClass){
+        System.out.println("Creating new " + metadataClass.getName());
+        MetadataManager<IHopMetadata> manager = new MetadataManager<>(leanGuiLayout, this, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
+        manager.newMetadataWithEditor();
+
+    }
+
+    public void onEditMetadata(){}
 
     @GuiToolbarElement(
             root = GUI_PLUGIN_TOOLBAR_PARENT_ID,
@@ -185,12 +232,12 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
                 IHopMetadataSerializer<IHopMetadata> serializer = metadataProvider.getSerializer(metadataClass);
                 List<String> names = serializer.listObjectNames();
-                MetadataTreeGridHelper metadataTreeGridHelper = new MetadataTreeGridHelper(annotation.name(), annotation.image(), metadataClass);
+                MetadataTreeGridHelper metadataTreeGridHelper = new MetadataTreeGridHelper(this, annotation.name(), annotation.image(), metadataClass);
 
                 // add hierarchical data to TreeData (null for parent items, Class<IHopMetadata>)
                 metadataData.addItem(null, metadataTreeGridHelper);
                 for(String name: names){
-                    metadataData.addItem(metadataTreeGridHelper, new MetadataTreeGridHelper(name, null, metadataClass));
+                    metadataData.addItem(metadataTreeGridHelper, new MetadataTreeGridHelper(this, name, null, metadataClass));
                 }
 
             }catch(HopException e){
@@ -199,4 +246,64 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         }
         metadataTree.addComponentHierarchyColumn(MetadataTreeGridHelper::getMetadataComponent);
     }
+
+    public void addEditor(MetadataEditor<?> editor){
+        PropsUi props = PropsUi.getInstance();
+
+        Div editorDiv = new Div();
+        editorDiv.setId("editor-div");
+        editorDiv.setSizeFull();
+//        editorDiv.setVisible(false);
+
+        HorizontalLayout tabLayout = new HorizontalLayout();
+
+        if(editor.getTitleImage() != null){
+            Image tabImage  = editor.getTitleImage();
+            tabLayout.add(tabImage);
+        }
+        if(StringUtils.isNotEmpty(editor.getTitle())){
+            Label tabLabel = new Label(editor.getTitle());
+            tabLayout.add(tabLabel);
+        }else{
+            Label tabLabel = new Label("New Editor");
+            tabLayout.add(tabLabel);
+        }
+        Tab editorTab = new Tab(tabLayout);
+
+        tabHolderDiv.add(editorDiv);
+        tabsToPages.put(editorTab, editorDiv);
+        metadataTabs.add(editorTab);
+        metadataTabs.setSelectedTab(editorTab);
+
+        editor.createControl(editorDiv);
+
+    }
+
+    public void updateEditor(MetadataEditor<?> editor) {
+
+        if (editor == null) return;
+
+        // Update TabItem
+        //
+/*
+        for (CTabItem item : tabFolder.getItems()) {
+            if (editor.equals(item.getData())) {
+                item.setText(editor.getTitle());
+                if (editor.isChanged()) item.setFont(GuiResource.getInstance().getFontBold());
+                else item.setFont(tabFolder.getFont());
+                break;
+            }
+        }
+*/
+
+        // Update TreeItem
+        //
+        this.refresh();
+    }
+
+
+    public ILogChannel getLog(){
+        return leanGuiLayout.getLog();
+    }
+
 }
