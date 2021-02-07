@@ -104,7 +104,7 @@ public class GuiResource {
      * @return the loaded image
      */
     public Image getImage(String location ) {
-        Image img = new Image(location, "");
+        Image img = new Image(ConstUi.LEAN_FRONTEND_FOLDER + location, "");
         img.setWidth(ConstUi.SMALL_ICON_SIZE_PX);
         img.setHeight(ConstUi.SMALL_ICON_SIZE_PX);
         return img;
@@ -162,9 +162,9 @@ public class GuiResource {
 
         Image image = imageMap.get(key);
         if (image == null) {
-            VaadinUniversalImage svg = VaadinSvgImageUtil.getUniversalImage(classLoader, location);
+            VaadinUniversalImage svg = VaadinSvgImageUtil.getUniversalImage(classLoader, ConstUi.LEAN_FRONTEND_FOLDER + location);
             image = getZoomedImage(svg, width, height);
-            imageMap.put(location, image);
+            imageMap.put(ConstUi.LEAN_FRONTEND_FOLDER + location, image);
         }
         return image;
     }

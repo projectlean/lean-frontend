@@ -14,6 +14,10 @@ import org.apache.hop.core.database.DatabaseMeta;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.core.gui.plugin.key.GuiKeyboardShortcut;
 import org.apache.hop.core.gui.plugin.key.GuiOsxKeyboardShortcut;
+import org.apache.hop.core.logging.ILogChannel;
+import org.apache.hop.core.logging.ILoggingObject;
+import org.apache.hop.core.logging.LogChannel;
+import org.apache.hop.core.logging.LoggingObject;
 import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.ui.core.metadata.MetadataManager;
@@ -40,6 +44,8 @@ import java.util.Objects;
 @VaadinSessionScope
 public class LeanGuiLayout extends Composite<Div> implements RouterLayout{
 
+    public static final String APP_NAME = "Lean";
+
     private static LeanGuiLayout leanGuiLayout;
 
     public static String leanGuiLayoutId;
@@ -57,6 +63,9 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout{
     private Map<Class<? extends ILeanPerspective>, ILeanPerspective> perspectivesMap;
 
     private IVariables variables;
+
+    private ILoggingObject loggingObject;
+    private ILogChannel log;
 
     private LeanToolbar leanMainToolbar, perspectivesToolbar;
 
@@ -76,6 +85,9 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout{
 
     public LeanGuiLayout(){
         leanGuiLayoutId = String.valueOf(VaadinSession.getCurrent().hashCode());
+
+        loggingObject = new LoggingObject(APP_NAME);
+        log = new LogChannel(APP_NAME);
 
         // TODO: move variables and metadataprovider to singleton
         LeanMetadataUtil leanMetadataUtil = LeanMetadataUtil.getInstance();
@@ -215,6 +227,24 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout{
         Objects.requireNonNull(hasElement.getElement());
         mainBody.removeAll();
         mainBody.getElement().appendChild(hasElement.getElement());
+    }
+
+    /**
+     * Gets the variables
+     *
+     * @return value of variables
+     */
+    public IVariables getVariables(){
+        return variables;
+    }
+
+    /**
+     * Gets log
+     *
+     * @return value of log
+     */
+    public ILogChannel getLog() {
+        return log;
     }
 
 }
