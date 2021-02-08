@@ -69,6 +69,10 @@ public abstract class MetadataEditor<T extends IHopMetadata> extends MetadataFil
                         ConstUi.LARGE_ICON_SIZE));
     }
 
+    public T getMetadata(){
+        return metadata;
+    }
+
     public Image getImage() {
         return image;
     }
