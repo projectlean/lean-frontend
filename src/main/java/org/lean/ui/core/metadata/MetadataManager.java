@@ -158,6 +158,7 @@ public class MetadataManager<T extends IHopMetadata> {
             return false;
         }
     }
+*/
 
     public void editWithEditor(String name) {
         if (name == null) {
@@ -167,8 +168,7 @@ public class MetadataManager<T extends IHopMetadata> {
         try {
             HopMetadata annotation = HopMetadataUtil.getHopMetadataAnnotation(managedClass);
 
-            MetadataPerspective perspective = MetadataPerspective.getInstance();
-            MetadataEditor<?> editor = perspective.findEditor(annotation.key(), name);
+            MetadataEditor<?> editor = metadataPerspective.findEditor(annotation.key(), name);
 
             if (editor == null) {
 
@@ -184,15 +184,16 @@ public class MetadataManager<T extends IHopMetadata> {
 
                 initializeElementVariables(element);
 
-                perspective.addEditor(createEditor(element));
+                metadataPerspective.addEditor(createEditor(element));
             } else {
-                perspective.setActiveEditor(editor);
+                metadataPerspective.setActiveEditor(editor);
             }
         } catch (Exception e) {
             new ErrorDialog("Error", "Error editing metadata", e);
         }
     }
-    */
+
+
 
     private void initializeElementVariables( T element ) {
         if ( element instanceof IVariables ) {
@@ -200,12 +201,15 @@ public class MetadataManager<T extends IHopMetadata> {
         }
     }
 
-/**
-     * delete an element
-     *
-     * @param elementName The name of the element to delete
-     * @return True if anything was deleted
-     *//*
+
+    /*
+
+    /**
+         * delete an element
+         *
+         * @param elementName The name of the element to delete
+         * @return True if anything was deleted
+         *//*
 
     public boolean deleteMetadata( String elementName ) {
 

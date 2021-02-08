@@ -1,9 +1,6 @@
 package org.lean.ui.plugins.perspective.metadata;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
-import com.vaadin.flow.component.grid.contextmenu.GridMenuItem;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -22,15 +19,15 @@ import org.apache.hop.metadata.api.HopMetadata;
 import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
-import org.apache.hop.ui.core.gui.GuiResource;
+import org.apache.hop.metadata.util.HopMetadataUtil;
 import org.apache.hop.ui.core.metadata.MetadataFileType;
 import org.apache.hop.ui.hopgui.file.empty.EmptyFileType;
-import org.eclipse.swt.custom.CTabItem;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.core.metadata.LeanMetadataUtil;
 import org.lean.ui.context.IGuiContextHandler;
 import org.lean.ui.core.MetadataEditor;
 import org.lean.ui.core.PropsUi;
+import org.lean.ui.core.dialog.ErrorDialog;
 import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.core.metadata.MetadataManager;
@@ -78,6 +75,9 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
     private Map<Tab, Div> tabsToPages;
 
     public TreeGrid<MetadataTreeGridHelper> metadataTree;
+
+    private Map<Tab, MetadataEditor> editorsTabsMap = new HashMap<>();
+
 
     public MetadataPerspective(){
         super();
@@ -186,6 +186,22 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
     public void onEditMetadata(){}
 
+    public void onEditMetadata(Class<IHopMetadata> metadataClass, String displayName){
+
+        MetadataEditor<?> editor = this.findEditor(metadataClass.getName(), displayName);
+        if(editor != null){
+            this.setActiveEditor(editor);
+        }else{
+            try{
+                MetadataManager<IHopMetadata> manager = new MetadataManager<>(leanGuiLayout, this, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
+                manager.editWithEditor(displayName);
+            }catch(Exception e){
+                new ErrorDialog("Error", "Error editing metadata", e);
+            }
+        }
+
+    }
+
     @GuiToolbarElement(
             root = GUI_PLUGIN_TOOLBAR_PARENT_ID,
             id = TOOLBAR_ITEM_EDIT,
@@ -275,6 +291,7 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         metadataTabs.add(editorTab);
         metadataTabs.setSelectedTab(editorTab);
 
+        editorsTabsMap.put(editorTab, editor);
         editor.createControl(editorDiv);
 
     }
@@ -305,5 +322,36 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
     public ILogChannel getLog(){
         return leanGuiLayout.getLog();
     }
+
+    /**
+     * Find a metadata editor
+     *
+     * @param objectKey the metadata annotation key
+     * @param name the name of the metadata
+     * @return the metadata editor or null if not found
+     */
+    public MetadataEditor<?> findEditor(String objectKey, String name) {
+        if (objectKey == null || name == null) return null;
+
+        for (MetadataEditor<?> editor : editorsTabsMap.values()) {
+            IHopMetadata metadata = editor.getMetadata();
+            HopMetadata annotation = HopMetadataUtil.getHopMetadataAnnotation(metadata.getClass());
+            if (annotation != null
+                    && annotation.key().equals(objectKey)
+                    && name.equals(metadata.getName())) {
+                return editor;
+            }
+        }
+        return null;
+    }
+
+    public void setActiveEditor(MetadataEditor<?> editor){
+        for(Tab editorTab : editorsTabsMap.keySet() ){
+            if(editorsTabsMap.get(editorTab).equals(editor)){
+                metadataTabs.setSelectedTab(editorTab);
+            }
+        }
+    }
+
 
 }

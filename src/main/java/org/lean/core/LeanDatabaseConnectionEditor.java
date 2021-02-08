@@ -1,6 +1,8 @@
 package org.lean.core;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import org.apache.xmlgraphics.xmp.Metadata;
 import org.lean.core.LeanDatabaseConnection;
 import org.lean.ui.core.MetadataEditor;
@@ -38,6 +40,9 @@ public class LeanDatabaseConnectionEditor extends MetadataEditor<LeanDatabaseCon
 
     @Override
     public void createControl(Component editorComponent){
+
+        Div div = (Div)editorComponent;
+        div.add(new Label("DFGDFASDFADSFADSFSADFASDFASDFASDFASDF"));
 
     }
 }
