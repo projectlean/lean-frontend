@@ -1,5 +1,7 @@
 package org.lean.ui.core;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Image;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.exception.HopException;
@@ -11,6 +13,7 @@ import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
 import org.apache.hop.ui.core.dialog.ErrorDialog;
 import org.apache.hop.ui.core.metadata.MetadataFileTypeHandler;
+import org.eclipse.swt.widgets.Composite;
 import org.lean.ui.core.gui.GuiResource;
 import org.lean.ui.core.metadata.IMetadataEditor;
 import org.lean.ui.core.metadata.MetadataEditorDialog;
@@ -26,7 +29,7 @@ public abstract class MetadataEditor<T extends IHopMetadata> extends MetadataFil
 
     private static final Class<?> PKG = MetadataEditorDialog.class; // For Translator
 
-    private MetadataPerspective metadataPerspective;
+    protected MetadataPerspective metadataPerspective;
     protected MetadataManager<T> manager;
     protected T metadata;
 
@@ -67,6 +70,10 @@ public abstract class MetadataEditor<T extends IHopMetadata> extends MetadataFil
                         annotation.image(),
                         ConstUi.LARGE_ICON_SIZE,
                         ConstUi.LARGE_ICON_SIZE));
+    }
+
+    public Button[] createButtonsForButtonBar(final Component parent) {
+        return null;
     }
 
     public T getMetadata(){

@@ -1,6 +1,7 @@
 package org.lean.ui.plugins.perspective.metadata;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -15,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.core.logging.ILogChannel;
+import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.metadata.api.HopMetadata;
 import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
@@ -292,7 +294,21 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         metadataTabs.setSelectedTab(editorTab);
 
         editorsTabsMap.put(editorTab, editor);
-        editor.createControl(editorDiv);
+
+        Button[] buttons = editor.createButtonsForButtonBar(editorDiv);
+        // add buttons to bottom of editorDiv
+
+        HorizontalLayout editorLayout = new HorizontalLayout();
+        editorLayout.setSizeFull();
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+        buttonsLayout.setHeight("3vw");
+        buttonsLayout.setWidthFull();
+        if(buttons != null){
+            buttonsLayout.add(buttons);
+        }
+        editorDiv.add(editorLayout, buttonsLayout);
+
+        editor.createControl(editorLayout);
 
     }
 
@@ -351,6 +367,10 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
                 metadataTabs.setSelectedTab(editorTab);
             }
         }
+    }
+
+    public IVariables getVariables(){
+        return leanGuiLayout.getVariables();
     }
 
 
