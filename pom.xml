@@ -12,11 +12,11 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <hop.version>0.60-SNAPSHOT</hop.version>
+        <hop.version>0.70-SNAPSHOT</hop.version>
         <jandex-maven-plugin.version>1.0.8</jandex-maven-plugin.version>
-        <jetty.version>9.4.36.v20210114</jetty.version>
-        <lean.version>0.0.10-SNAPSHOT</lean.version>
-        <vaadin.version>18.0.5</vaadin.version>
+        <jetty.version>9.4.38.v20210224</jetty.version>
+        <lean.version>0.0.11-SNAPSHOT</lean.version>
+        <vaadin.version>18.0.6</vaadin.version>
     </properties>
 
     <repositories>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring</artifactId>
-            <version>13.0.2</version>
+            <version>16.0.0</version>
         </dependency><!--
         <dependency>
             <groupId>org.vaadin.artur</groupId>
@@ -97,12 +97,17 @@
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-core</artifactId>
-            <version>${hop.version}</version>
+            <version>0.70-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-engine</artifactId>
-            <version>${hop.version}</version>
+            <version>0.70-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hop</groupId>
+            <artifactId>hop-ui</artifactId>
+            <version>0.70-SNAPSHOT</version>
         </dependency>
 
         <!-- Others -->
@@ -116,11 +121,6 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hop</groupId>
-            <artifactId>hop-ui-swt</artifactId>
-            <version>0.60-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

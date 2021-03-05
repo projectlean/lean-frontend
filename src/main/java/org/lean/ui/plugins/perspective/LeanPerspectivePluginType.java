@@ -9,7 +9,7 @@ public class LeanPerspectivePluginType extends BasePluginType<LeanPerspectivePlu
     private LeanPerspectivePluginType(){
         super(LeanPerspectivePlugin.class, "LEAN_PERSPECTIVES", "Lean Perspective");
 
-        pluginFolders.add(new PluginFolder("plugins", false, true));
+//        pluginFolders.add(new PluginFolder("plugins", false, true));
     }
 
     private static LeanPerspectivePluginType pluginType;

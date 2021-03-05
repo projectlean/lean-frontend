@@ -45,10 +45,10 @@ public class ConstUi {
     public static final String LEAN_LOGO_ALT = "Lean - Lean Enterprise ANalytics";
 
     /** What is the default height for horizontal headers, footers and toolbars? */
-    public static final String HBAR_HEIGHT = "3vh";
+    public static final String HBAR_HEIGHT = "4vh";
 
     /** What is the default width for vertical toolbars? */
-    public static final String VBAR_WIDTH = "1.5vw";
+    public static final String VBAR_WIDTH = "2.5vw";
 
     /** What's the file systems file separator on this operating system? */
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");

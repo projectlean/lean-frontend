@@ -1,8 +1,11 @@
 package org.lean.ui.core.dialog;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.apache.hop.core.Const;
 import org.apache.hop.core.IDescription;
 import org.apache.hop.core.Props;
@@ -11,12 +14,12 @@ import org.lean.ui.core.PropsUi;
 
 public class EnterTextDialog extends Dialog {
 
-    private static final Class<?> PKG = org.apache.hop.ui.core.dialog.EnterTextDialog.class; // For Translator
+    private static final Class<?> PKG = EnterTextDialog.class; // For Translator
 
     private String title, message;
 
     private Label wlDesc;
-//    private Text wDesc;
+    private Text wDesc;
 //    private FormData fdlDesc, fdDesc;
     private Button wOk, wCancel;
 //    private Listener lsOk, lsCancel;
@@ -60,6 +63,11 @@ public class EnterTextDialog extends Dialog {
         fixed = false;
         readonly = false;
         singleLine = false;
+
+        wlDesc = new Label(message);
+        wDesc = new Text(text);
+
+        add(new HorizontalLayout(wlDesc, wDesc));
     }
 
     public void setReadOnly() {

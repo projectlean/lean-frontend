@@ -32,6 +32,9 @@ public class LeanGui extends Composite<Div> implements RouterLayout {
           mainFooter
         );
         leanGuiVL.setId("lean-gui-main-vl");
+        leanGuiVL.setPadding(false);
+        leanGuiVL.setMargin(false);
+        leanGuiVL.setSpacing(false);
         leanGuiVL.setSizeFull();
 
         getContent().add(leanGuiVL);

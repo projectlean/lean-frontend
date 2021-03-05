@@ -20,12 +20,14 @@ public class MainHeader extends HorizontalLayout {
         this.setHeight(ConstUi.HBAR_HEIGHT);
         this.setWidthFull();
         this.setId("main-header");
+        this.getStyle().set("margin-top", "2px");
 
         Div logoDiv = new Div();
         Div mainHeaderDiv = new Div();
         Div loginInfoDiv = new Div();
 
         logoDiv.setWidth("10%");
+        logoDiv.getStyle().set("margin-left", "15px");
         mainHeaderDiv.setSizeFull();
         loginInfoDiv.setWidth("10%");
 

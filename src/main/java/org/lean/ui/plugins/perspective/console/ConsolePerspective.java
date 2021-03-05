@@ -2,13 +2,13 @@ package org.lean.ui.plugins.perspective.console;
 
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RoutePrefix;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
-import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
-import org.lean.core.gui.plugin.toolbar.GuiToolbarElementType;
-import org.lean.ui.context.IGuiContextHandler;
+import org.apache.hop.ui.hopgui.file.IHopFileType;
+import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
+import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
+import org.lean.ui.leangui.file.ILeanFileTypeHandler;
 import org.lean.ui.plugins.perspective.BasePerspective;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
@@ -56,6 +56,26 @@ public class ConsolePerspective extends BasePerspective implements ILeanPerspect
     @Override
     public void initialize(LeanGuiLayout leanGuiLayout, IHopMetadataProvider metadataProvider) {
         this.leanGuiLayout = leanGuiLayout;
+    }
+
+    @Override
+    public ILeanFileTypeHandler getActiveFileTypeHandler() {
+        return null;
+    }
+
+    @Override
+    public void setActiveFileTypeHandler(IHopFileTypeHandler activeFileTypeHandler) {
+
+    }
+
+    @Override
+    public List<IHopFileType> getSupportedHopFileTypes() {
+        return null;
+    }
+
+    @Override
+    public boolean remove(ILeanFileTypeHandler typeHandler) {
+        return false;
     }
 
     @Override

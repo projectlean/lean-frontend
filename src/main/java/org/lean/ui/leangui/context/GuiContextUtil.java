@@ -1,11 +1,8 @@
-package org.lean.ui.context;
+package org.lean.ui.leangui.context;
 
 import org.apache.hop.core.gui.Point;
-import org.apache.hop.core.gui.plugin.IGuiActionLambda;
 import org.apache.hop.core.gui.plugin.action.GuiAction;
 import org.apache.hop.core.gui.plugin.action.GuiActionType;
-import org.lean.ui.ISingletonProvider;
-import org.lean.ui.ImplementationLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,12 +11,13 @@ import java.util.List;
 
 public class GuiContextUtil {
 
-    private static final ISingletonProvider PROVIDER;
-    static {
-        PROVIDER = (ISingletonProvider) ImplementationLoader.newInstance(GuiContextUtil.class);
-    }
+    private static GuiContextUtil instance;
+
     public static final GuiContextUtil getInstance() {
-        return (GuiContextUtil) PROVIDER.getInstanceInternal();
+        if(instance == null){
+            instance = new GuiContextUtil();
+        }
+        return instance;
     }
 
     public final List<GuiAction> getContextActions(IActionContextHandlersProvider provider, GuiActionType actionType, String contextId){
@@ -33,7 +31,7 @@ public class GuiContextUtil {
    * @param actionType The type to filter out
    * @return A new list with only the actions of the specified type
    */
-  public final List<GuiAction> filterActions( List<GuiAction> guiActions, GuiActionType actionType ) {
+  public final List<GuiAction> filterActions(List<GuiAction> guiActions, GuiActionType actionType ) {
     List<GuiAction> filtered = new ArrayList<>();
     for ( GuiAction guiAction : guiActions ) {
       if ( guiAction.getType().equals( actionType ) ) {
@@ -58,17 +56,15 @@ public class GuiContextUtil {
         return filtered;
     }
 
-    // TODO: write Vaadin implementation
-/*
-    public final void handleActionSelection( Shell parent, String message, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
-        handleActionSelection( parent, message, null, provider, actionType, contextId );
+    public final void handleActionSelection( String message, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
+        handleActionSelection( message, null, provider, actionType, contextId );
     }
 
-    public final void handleActionSelection(Shell parent, String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
-        handleActionSelection( parent, message, clickLocation, provider, actionType, contextId, false );
+    public final void handleActionSelection( String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
+        handleActionSelection( message, clickLocation, provider, actionType, contextId, false );
     }
 
-    public final void handleActionSelection( Shell parent, String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId, boolean sortByName ) {
+    public final void handleActionSelection(String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId, boolean sortByName ) {
         // Get the list of create actions in the Hop UI context...
         //
         List<GuiAction> actions = getContextActions( provider, actionType, contextId );
@@ -79,31 +75,30 @@ public class GuiContextUtil {
             Collections.sort( actions, Comparator.comparing( GuiAction::getName ) );
         }
 
-        handleActionSelection( parent, message, clickLocation, new GuiContextHandler( contextId, actions ) );
+        handleActionSelection( message, clickLocation, new GuiContextHandler( contextId, actions ) );
     }
 
-    public boolean handleActionSelection( Shell parent, String message, IGuiContextHandler contextHandler ) {
-        return handleActionSelection( parent, message, null, contextHandler );
+    public boolean handleActionSelection(String message, IGuiContextHandler contextHandler ) {
+        return handleActionSelection( message, null, contextHandler );
     }
 
-    */
 /**
-     * @param parent
      * @param message
      * @param clickLocation
      * @param contextHandler
      * @return true if the action dialog lost focus
-     *//*
+     */
 
-    public synchronized boolean handleActionSelection( Shell parent, String message, Point clickLocation, IGuiContextHandler contextHandler ) {
+    public synchronized boolean handleActionSelection( String message, Point clickLocation, IGuiContextHandler contextHandler ) {
         List<GuiAction> actions = contextHandler.getSupportedActions();
         if ( actions.isEmpty() ) {
             return false;
         }
 
+/*
         try {
 
-            synchronized ( parent ) {
+            synchronized () {
                 ContextDialog contextDialog = shellDialogMap.get( parent.getText() );
                 if ( contextDialog != null ) {
                     if ( !contextDialog.isDisposed() ) {
@@ -130,9 +125,9 @@ public class GuiContextUtil {
                 }
             }
         } catch ( Exception e ) {
-            new ErrorDialog( parent, "Error", "An error occurred executing action", e );
+            new ErrorDialog("Error", "An error occurred executing action", e );
         }
+*/
         return false;
     }
-*/
 }

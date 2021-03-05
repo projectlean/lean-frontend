@@ -20,8 +20,8 @@ public class GuiRegistry {
 
     /**
      * this map links the GUI class to the menu elements information.
-     * For example, it would contain the root ID of the HopGui class at the top of the map.
-     * For the HopGui main menu we would have a menu elements stored per ID.
+     * For example, it would contain the root ID of the LeanGui class at the top of the map.
+     * For the LeanGui main menu we would have a menu elements stored per ID.
      */
     private Map<String, Map<String, GuiToolbarItem>> guiToolbarMap;
     private Map<String, Map<String, GuiElements>> dataElementsMap;
@@ -29,7 +29,7 @@ public class GuiRegistry {
     private Map<String, List<GuiAction>> contextActionsMap;
 
     /**
-     * The first entry in this map is the HopGui ID
+     * The first entry in this map is the LeanGui ID
      * Then the maps found are GuiPlugin class names and their instances.  It's used to get the methods and fields for toolbars, components, ...
      */
     private Map<String, Map<String, Map<String, Object>>> guiPluginObjectsMap;
@@ -50,7 +50,7 @@ public class GuiRegistry {
     }
 
     /**
-     * Add a GUI Toolbar element under a particular gui root (example: HopGui-MainMenu)
+     * Add a GUI Toolbar element under a particular gui root (example: LeanGui-MainMenu)
      * under a particular parent element ID
      *
      * @param root
@@ -297,7 +297,7 @@ public class GuiRegistry {
     }
 
     /**
-     * @param leanLayoutGuiId           The HopGui ID
+     * @param leanLayoutGuiId           The LeanGui ID
      * @param guiPluginClassname
      * @param instanceId
      * @param guiPluginObject
@@ -317,14 +317,14 @@ public class GuiRegistry {
     }
 
     /**
-     * @param hopGuiId           The HopGui ID
+     * @param leanGuiId           The LeanGui ID
      * @param guiPluginClassname
      * @param instanceId
      * @return
      */
-    public Object findGuiPluginObject( String hopGuiId, String guiPluginClassname, String instanceId ) {
+    public Object findGuiPluginObject( String leanGuiId, String guiPluginClassname, String instanceId ) {
 
-        Map<String, Map<String, Object>> instanceObjectsMap = guiPluginObjectsMap.get( hopGuiId );
+        Map<String, Map<String, Object>> instanceObjectsMap = guiPluginObjectsMap.get( leanGuiId );
         if ( instanceObjectsMap == null ) {
             return null;
         }
@@ -338,12 +338,12 @@ public class GuiRegistry {
     /**
      * Remove the GuiPlugin object once it's disposed.
      *
-     * @param hopGuiId
+     * @param leanGuiId
      * @param guiPluginClassname
      * @param instanceId
      */
-    public void removeGuiPluginObject( String hopGuiId, String guiPluginClassname, String instanceId ) {
-        Map<String, Map<String, Object>> instanceObjectsMap = guiPluginObjectsMap.get( hopGuiId );
+    public void removeGuiPluginObject( String leanGuiId, String guiPluginClassname, String instanceId ) {
+        Map<String, Map<String, Object>> instanceObjectsMap = guiPluginObjectsMap.get( leanGuiId );
         if ( instanceObjectsMap == null ) {
             return;
         }
@@ -357,11 +357,11 @@ public class GuiRegistry {
     /**
      * Remove all objects with the given instanceId
      *
-     * @param hopGuiId
+     * @param leanGuiId
      * @param instanceId
      */
-    public void removeGuiPluginObjects( String hopGuiId, String instanceId ) {
-        Map<String, Map<String, Object>> instanceObjectsMap = guiPluginObjectsMap.get( hopGuiId );
+    public void removeGuiPluginObjects( String leanGuiId, String instanceId ) {
+        Map<String, Map<String, Object>> instanceObjectsMap = guiPluginObjectsMap.get( leanGuiId );
         if ( instanceObjectsMap == null ) {
             return;
         }

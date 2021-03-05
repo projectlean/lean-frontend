@@ -24,8 +24,8 @@ import org.lean.presentation.LeanPresentation;
 import org.lean.presentation.component.LeanComponent;
 import org.lean.presentation.connector.LeanConnector;
 import org.lean.presentation.theme.LeanTheme;
+import org.lean.ui.plugins.perspective.LeanPerspectiveManager;
 
-import javax.inject.Singleton;
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
 import java.io.FileFilter;
@@ -189,7 +189,7 @@ public class LeanMetadataUtil {
             List<String> lines = Files.readAllLines( Paths.get( "../lean-bi/src/test/resources/steelwheels/steelwheels.script" ), StandardCharsets.UTF_8 );
 
             DatabaseMeta databaseMeta = swConnection.createDatabaseMeta();
-            Database database = new Database( new LoggingObject( swConnection.getName() ), databaseMeta );
+            Database database = new Database( new LoggingObject( swConnection.getName() ), variables, databaseMeta );
             try {
                 database.connect();
 

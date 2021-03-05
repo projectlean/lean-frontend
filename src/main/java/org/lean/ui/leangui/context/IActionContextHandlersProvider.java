@@ -1,4 +1,4 @@
-package org.lean.ui.context;
+package org.lean.ui.leangui.context;
 
 import java.util.List;
 

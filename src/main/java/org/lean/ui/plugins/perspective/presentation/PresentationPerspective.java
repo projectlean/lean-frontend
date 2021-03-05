@@ -5,8 +5,13 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
-import org.lean.ui.context.IGuiContextHandler;
+import org.apache.hop.ui.hopgui.file.IHopFileType;
+import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
+import org.lean.presentation.LeanPresentation;
+import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
+import org.lean.ui.leangui.file.ILeanFileTypeHandler;
+import org.lean.ui.leangui.file.presentation.LeanPresentationFileType;
 import org.lean.ui.plugins.perspective.BasePerspective;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
@@ -17,7 +22,7 @@ import java.util.List;
         id = "LeanPresentationPerspective",
         name = "LeanPresentationPerspective",
         description = "Lean Presentation Perspective",
-        image = "./frontend/images/perspectives/presentation.svg",
+        image = "./frontend/images/presentation.svg",
         route = "presentation"
 )
 @Route(value="presentation", layout = LeanGuiLayout.class)
@@ -62,7 +67,32 @@ public class PresentationPerspective extends BasePerspective implements ILeanPer
     }
 
     @Override
+    public ILeanFileTypeHandler getActiveFileTypeHandler() {
+        return null;
+    }
+
+    @Override
+    public void setActiveFileTypeHandler(IHopFileTypeHandler activeFileTypeHandler) {
+
+    }
+
+    @Override
+    public List<IHopFileType> getSupportedHopFileTypes() {
+        return null;
+    }
+
+    @Override
+    public boolean remove(ILeanFileTypeHandler typeHandler) {
+        return false;
+    }
+
+    @Override
     public List<IGuiContextHandler> getContextHandlers() {
+        return null;
+    }
+
+    public ILeanFileTypeHandler addPresentation(LeanPresentation presentation){
+        System.out.println("Presentation added: " + presentation.getName());
         return null;
     }
 

@@ -110,7 +110,6 @@ public class LeanGuiEnvironment extends LeanClientEnvironment{
             // Get all the file handler plugins
             //
 
-// TODO: No Lean file types yet
 /*
             PluginRegistry registry = PluginRegistry.getInstance();
             List<IPlugin> plugins = registry.getPlugins( HopFileTypePluginType.class );

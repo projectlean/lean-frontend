@@ -6,6 +6,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.apache.hop.core.Const;
@@ -156,7 +158,9 @@ public class ErrorDialog extends Dialog {
                     };
         }
 
-        buttonsLayout.add(buttons);
+        FlexLayout buttonWrapper = new FlexLayout(buttons);
+        buttonWrapper.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        buttonsLayout.add(buttonWrapper);
 
         // Add listeners
         wOk.addClickListener(e -> ok());
