@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.List;
 
 /** This class contains the widgets for the GUI elements of a GUI Plugin */
-@VaadinSessionScope
+//@VaadinSessionScope
 public class GuiToolbarWidgets extends BaseGuiWidgets {
 
     private Map<String, GuiToolbarItem> guiToolBarMap;
@@ -30,7 +30,7 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
     private Map<String, Component> toolItemMap;
 
     public GuiToolbarWidgets(String leanGuiLayoutId) {
-        super(UUID.randomUUID().toString(), leanGuiLayoutId);
+        super(leanGuiLayoutId, UUID.randomUUID().toString());
         guiToolBarMap = new HashMap<>();
         widgetsMap = new HashMap<>();
         toolItemMap = new HashMap<>();
@@ -204,17 +204,15 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
     }
 */
 
-/*
     public void enableToolbarItem(String id, boolean enabled) {
-        ToolItem toolItem = toolItemMap.get(id);
-        if (toolItem == null || toolItem.isDisposed()) {
+        Component toolItem = toolItemMap.get(id);
+        if (toolItem == null /*|| toolItem.isDisposed()*/) {
             return;
         }
-        if (enabled != toolItem.isEnabled()) {
-            toolItem.setEnabled(enabled);
+        if (enabled != toolItem.getElement().isEnabled()) {
+            toolItem.getElement().setEnabled(enabled);
         }
     }
-*/
 
     /**
      * Find the toolbar item with the given ID. Check the capability in the given file type Enable or
@@ -254,11 +252,11 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
     }
 */
 
-/*
-    public ToolItem findToolItem(String id) {
+    public Component findToolItem(String id) {
         return toolItemMap.get(id);
     }
 
+/*
     public void refreshComboItemList(String id) {
         GuiToolbarItem item = guiToolBarMap.get(id);
         if (item != null) {

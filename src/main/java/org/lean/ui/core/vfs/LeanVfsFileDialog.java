@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.commons.io.FilenameUtils;
@@ -32,8 +31,6 @@ import org.apache.hop.history.AuditList;
 import org.apache.hop.history.AuditManager;
 import org.apache.hop.ui.core.gui.HopNamespace;
 import org.apache.hop.ui.hopgui.file.HopFileTypePluginType;
-import org.apache.hop.ui.hopgui.file.HopFileTypeRegistry;
-import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.ui.core.ConstUi;
 import org.lean.ui.core.PropsUi;
@@ -44,16 +41,15 @@ import org.lean.ui.core.gui.GuiResource;
 import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.LeanFileTypeRegistry;
-import org.lean.ui.leangui.file.presentation.ILeanFileType;
-import org.springframework.expression.spel.ast.ValueRef;
+import org.lean.ui.plugins.file.LeanFileTypeRegistry;
+import org.lean.ui.plugins.file.ILeanFileType;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @GuiPlugin(description = "Allows you to browse to server of VFS locations")
-@VaadinSessionScope
+//@VaadinSessionScope
 public class LeanVfsFileDialog extends Dialog implements IFileDialog, IDirectoryDialog {
 
     private static final Class<?> PKG = LeanVfsFileDialog.class;

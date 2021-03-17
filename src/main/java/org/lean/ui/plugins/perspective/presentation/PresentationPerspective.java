@@ -10,9 +10,8 @@ import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.presentation.LeanPresentation;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
-import org.lean.ui.leangui.file.presentation.LeanPresentationFileType;
-import org.lean.ui.plugins.perspective.BasePerspective;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
 
@@ -22,12 +21,12 @@ import java.util.List;
         id = "LeanPresentationPerspective",
         name = "LeanPresentationPerspective",
         description = "Lean Presentation Perspective",
-        image = "./frontend/images/presentation.svg",
+        image = "frontend/images/presentation.svg",
         route = "presentation"
 )
 @Route(value="presentation", layout = LeanGuiLayout.class)
 @GuiPlugin(description = "This perspective allows you to modify a presentation")
-public class PresentationPerspective extends BasePerspective implements ILeanPerspective {
+public class PresentationPerspective extends LeanPerspectiveBase implements ILeanPerspective {
 
     public PresentationPerspective(){
         super();

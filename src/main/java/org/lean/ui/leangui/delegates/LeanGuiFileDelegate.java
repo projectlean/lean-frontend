@@ -2,13 +2,12 @@ package org.lean.ui.leangui.delegates;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.exception.HopException;
-import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.ui.core.dialog.BaseDialog;
 import org.lean.ui.core.dialog.ErrorDialog;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
-import org.lean.ui.leangui.file.LeanFileTypeRegistry;
-import org.lean.ui.leangui.file.presentation.ILeanFileType;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.file.LeanFileTypeRegistry;
+import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 
 public class LeanGuiFileDelegate {

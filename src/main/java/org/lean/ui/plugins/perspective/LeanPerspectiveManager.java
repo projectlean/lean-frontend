@@ -10,7 +10,7 @@ import org.lean.ui.layout.LeanGuiLayout;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-@VaadinSessionScope
+//@VaadinSessionScope
 public class LeanPerspectiveManager {
 
     private LeanGuiLayout leanGuiLayout;

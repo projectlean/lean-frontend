@@ -14,9 +14,6 @@ import org.apache.hop.core.plugins.PluginRegistry;
 import org.apache.hop.core.row.value.ValueMetaPluginType;
 import org.apache.hop.core.util.EnvUtil;
 import org.apache.hop.core.vfs.plugin.VfsPluginType;
-import org.lean.core.exception.LeanException;
-import org.lean.presentation.component.type.LeanComponentPluginType;
-import org.lean.presentation.connector.type.LeanConnectorPluginType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

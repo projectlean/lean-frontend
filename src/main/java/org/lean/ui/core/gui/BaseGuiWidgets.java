@@ -3,6 +3,7 @@ package org.lean.ui.core.gui;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.logging.ILogChannel;
 import org.apache.hop.core.logging.LogChannel;
@@ -17,7 +18,7 @@ import org.lean.ui.plugins.perspective.presentation.PresentationPerspective;
 import java.lang.reflect.Method;
 import java.util.List;
 
-@VaadinSessionScope
+@UIScope
 public class BaseGuiWidgets {
 
     private String leanGuiLayoutId;

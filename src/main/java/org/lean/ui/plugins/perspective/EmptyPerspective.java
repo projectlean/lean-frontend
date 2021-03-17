@@ -7,12 +7,12 @@ import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
 
 import java.util.List;
 
 @Route(value="", layout = LeanGuiLayout.class)
-public class EmptyPerspective extends BasePerspective implements ILeanPerspective{
+public class EmptyPerspective extends LeanPerspectiveBase implements ILeanPerspective{
 
     public EmptyPerspective(){
         getContent().add(new Label("Empty Perspective"));

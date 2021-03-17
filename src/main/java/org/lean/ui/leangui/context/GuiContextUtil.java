@@ -1,17 +1,26 @@
 package org.lean.ui.leangui.context;
 
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.gui.Point;
 import org.apache.hop.core.gui.plugin.action.GuiAction;
 import org.apache.hop.core.gui.plugin.action.GuiActionType;
+import org.lean.ui.core.ContextDialog;
+import org.lean.ui.layout.LeanGuiLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//@VaadinSessionScope
 public class GuiContextUtil {
 
     private static GuiContextUtil instance;
+//    private static LeanGuiLayout leanGuiLayout;
+
+    private GuiContextUtil(){
+
+    }
 
     public static final GuiContextUtil getInstance() {
         if(instance == null){
@@ -56,15 +65,15 @@ public class GuiContextUtil {
         return filtered;
     }
 
-    public final void handleActionSelection( String message, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
-        handleActionSelection( message, null, provider, actionType, contextId );
+    public final void handleActionSelection(LeanGuiLayout leanGuiLayout, String message, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
+        handleActionSelection(leanGuiLayout, message, null, provider, actionType, contextId );
     }
 
-    public final void handleActionSelection( String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
-        handleActionSelection( message, clickLocation, provider, actionType, contextId, false );
+    public final void handleActionSelection(LeanGuiLayout leanGuiLayout, String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId ) {
+        handleActionSelection(leanGuiLayout, message, clickLocation, provider, actionType, contextId, false );
     }
 
-    public final void handleActionSelection(String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId, boolean sortByName ) {
+    public final void handleActionSelection(LeanGuiLayout leanGuiLayout, String message, Point clickLocation, IActionContextHandlersProvider provider, GuiActionType actionType, String contextId, boolean sortByName ) {
         // Get the list of create actions in the Hop UI context...
         //
         List<GuiAction> actions = getContextActions( provider, actionType, contextId );
@@ -75,11 +84,11 @@ public class GuiContextUtil {
             Collections.sort( actions, Comparator.comparing( GuiAction::getName ) );
         }
 
-        handleActionSelection( message, clickLocation, new GuiContextHandler( contextId, actions ) );
+        handleActionSelection(leanGuiLayout, message, clickLocation, new GuiContextHandler( contextId, actions ) );
     }
 
-    public boolean handleActionSelection(String message, IGuiContextHandler contextHandler ) {
-        return handleActionSelection( message, null, contextHandler );
+    public boolean handleActionSelection(LeanGuiLayout leanGuiLayout, String message, IGuiContextHandler contextHandler ) {
+        return handleActionSelection(leanGuiLayout, message, null, contextHandler );
     }
 
 /**
@@ -89,45 +98,36 @@ public class GuiContextUtil {
      * @return true if the action dialog lost focus
      */
 
-    public synchronized boolean handleActionSelection( String message, Point clickLocation, IGuiContextHandler contextHandler ) {
+    public synchronized boolean handleActionSelection(LeanGuiLayout leanGuiLayout, String message, Point clickLocation, IGuiContextHandler contextHandler ) {
         List<GuiAction> actions = contextHandler.getSupportedActions();
         if ( actions.isEmpty() ) {
             return false;
         }
 
-/*
-        try {
 
-            synchronized () {
-                ContextDialog contextDialog = shellDialogMap.get( parent.getText() );
-                if ( contextDialog != null ) {
-                    if ( !contextDialog.isDisposed() ) {
-                        contextDialog.dispose();
-                    }
-                    shellDialogMap.remove( parent.getText() );
-                    return true;
-                }
+//        try {
+//
+//            synchronized () {
+                // TODO: add to leanGuiLayout dialogMap
+//                ContextDialog contextDialog = new ContextDialog(leanGuiLayout, "Lean Context Dialog", clickLocation, actions, contextHandler.getContextId());
 
                 List<String> fileTypes = new ArrayList<>();
                 for ( GuiAction action : actions ) {
                     fileTypes.add( action.getType().name() + " - " + action.getName() + " : " + action.getTooltip() );
                 }
 
-                contextDialog = new ContextDialog( parent, message, clickLocation, actions, contextHandler.getContextId() );
-                shellDialogMap.put( parent.getText(), contextDialog );
-                GuiAction selectedAction = contextDialog.open();
-                shellDialogMap.remove( parent.getText() );
-                if ( selectedAction != null ) {
-                    IGuiActionLambda<?> actionLambda = selectedAction.getActionLambda();
-                    actionLambda.executeAction( contextDialog.isShiftClicked(), contextDialog.isCtrlClicked() );
-                } else {
-                    return contextDialog.isFocusLost();
-                }
-            }
-        } catch ( Exception e ) {
-            new ErrorDialog("Error", "An error occurred executing action", e );
-        }
-*/
+                ContextDialog contextDialog = new ContextDialog(leanGuiLayout, message, clickLocation, actions, contextHandler.getContextId() );
+                GuiAction selectedAction = contextDialog.openContextDialog();
+//                if ( selectedAction != null ) {
+//                    IGuiActionLambda<?> actionLambda = selectedAction.getActionLambda();
+//                    actionLambda.executeAction( contextDialog.isShiftClicked(), contextDialog.isCtrlClicked() );
+//                } else {
+//                    return contextDialog.isFocusLost();
+//                }
+//            }
+//        } catch ( Exception e ) {
+//            new ErrorDialog("Error", "An error occurred executing action", e );
+//        }
         return false;
     }
 }

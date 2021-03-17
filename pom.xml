@@ -16,7 +16,7 @@
         <jandex-maven-plugin.version>1.0.8</jandex-maven-plugin.version>
         <jetty.version>9.4.38.v20210224</jetty.version>
         <lean.version>0.0.11-SNAPSHOT</lean.version>
-        <vaadin.version>18.0.6</vaadin.version>
+        <vaadin.version>18.0.7</vaadin.version>
     </properties>
 
     <repositories>
@@ -68,7 +68,8 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring</artifactId>
             <version>16.0.0</version>
-        </dependency><!--
+        </dependency>
+        <!--
         <dependency>
             <groupId>org.vaadin.artur</groupId>
             <artifactId>a-vaadin-helper</artifactId>
@@ -126,7 +127,13 @@
 
     <build>
         <plugins>
-            <!-- Jetty plugin for easy testing without a server -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>            <!-- Jetty plugin for easy testing without a server -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>

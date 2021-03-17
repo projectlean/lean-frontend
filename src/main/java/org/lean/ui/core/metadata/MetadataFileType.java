@@ -6,8 +6,8 @@ import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.lean.ui.layout.LeanGuiLayout;
 import org.lean.ui.leangui.context.IGuiContextHandler;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
-import org.lean.ui.leangui.file.presentation.ILeanFileType;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.file.ILeanFileType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class MetadataFileType implements ILeanFileType {
     }
 
     @Override
-    public List<IGuiContextHandler> getContextHandlers(){
+    public List<IGuiContextHandler> getContextHandlers(LeanGuiLayout leanGuiLayout){
         List<IGuiContextHandler> handlers = new ArrayList<>();
         return handlers;
     }

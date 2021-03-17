@@ -17,7 +17,7 @@ import org.lean.ui.layout.LeanGuiLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-@VaadinSessionScope
+//@VaadinSessionScope
 public class MetadataContextHandler implements IGuiContextHandler {
 
     private static final Class<?> PKG = MetadataContextHandler.class;

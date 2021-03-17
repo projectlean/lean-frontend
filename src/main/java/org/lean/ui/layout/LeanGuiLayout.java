@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.database.DatabaseMeta;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
@@ -20,8 +21,6 @@ import org.apache.hop.core.logging.LogChannel;
 import org.apache.hop.core.logging.LoggingObject;
 import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
-import org.apache.hop.ui.hopgui.file.HopFileTypeRegistry;
-import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElementType;
 import org.lean.core.metadata.LeanMetadataUtil;
@@ -35,8 +34,8 @@ import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.leangui.delegates.LeanGuiContextDelegate;
 import org.lean.ui.leangui.delegates.LeanGuiFileDelegate;
-import org.lean.ui.leangui.file.presentation.ILeanFileType;
-import org.lean.ui.leangui.file.LeanFileTypeRegistry;
+import org.lean.ui.plugins.file.ILeanFileType;
+import org.lean.ui.plugins.file.LeanFileTypeRegistry;
 import org.lean.ui.plugins.perspective.*;
 import org.lean.ui.plugins.perspective.presentation.PresentationPerspective;
 import org.lean.ui.views.MainBody;
@@ -49,16 +48,16 @@ import java.util.*;
 @CssImport(value = "./styles/toolbar-tabs.css", themeFor = "vaadin-tab")
 @CssImport(value = "./styles/lean-layout.css")
 @GuiPlugin(description = "This is the main Lean UI")
-@VaadinSessionScope
+@UIScope
 public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActionContextHandlersProvider {
 
     public static final String DEFAULT_LEAN_GUI_NAMESPACE = "lean-gui";
 
     public static final String APP_NAME = "Lean";
 
-    private static LeanGuiLayout leanGuiLayout;
+//    private static LeanGuiLayout leanGuiLayout;
 
-    public static String leanGuiLayoutId;
+    public static String leanGuiLayoutId; //UUID.randomUUID().toString();
 
     private VerticalLayout leanMainVerticalLayout;
 
@@ -90,7 +89,7 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
     public static final String ID_MAIN_TOOLBAR_SAVE = "toolbar-10040-save";
     public static final String ID_MAIN_TOOLBAR_SAVE_AS = "toolbar-10050-save-as";
 
-    public LeanGuiContextDelegate contextDelegate;
+    public static LeanGuiContextDelegate contextDelegate;
     public LeanGuiFileDelegate fileDelegate;
 
 
@@ -98,8 +97,8 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
         getContent().setId("lean-gui-layout");
         getContent().setSizeFull();
 
-        leanGuiLayoutId = String.valueOf(VaadinSession.getCurrent().hashCode());
-
+//        leanGuiLayoutId = String.valueOf(System.identityHashCode(this)); //String.valueOf(VaadinSession.getCurrent().hashCode());
+        leanGuiLayoutId = String.valueOf(UI.getCurrent().hashCode());
 
         // TODO: move variables and metadataprovider to singleton
         LeanMetadataUtil leanMetadataUtil = LeanMetadataUtil.getInstance();
@@ -107,11 +106,11 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
         metadataProvider = leanMetadataUtil.getInstance().metadataProvider;
 
         perspectiveManager = new LeanPerspectiveManager(this, metadataProvider);
+        contextDelegate = new LeanGuiContextDelegate(this);
 
         loggingObject = new LoggingObject(APP_NAME);
         log = new LogChannel(APP_NAME);
 
-        contextDelegate = new LeanGuiContextDelegate(this);
         fileDelegate = new LeanGuiFileDelegate(this);
 
         leanMainVerticalLayout = new VerticalLayout();
@@ -301,7 +300,7 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
         LeanFileTypeRegistry registry = LeanFileTypeRegistry.getInstance();
         List<ILeanFileType> leanFileTypes = registry.getFileTypes();
         for(ILeanFileType leanFileType : leanFileTypes){
-            contextHandlers.addAll( leanFileType.getContextHandlers());
+            contextHandlers.addAll( leanFileType.getContextHandlers(this));
         }
 
         // Get all the metadata context handlers

@@ -5,7 +5,7 @@ import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.ui.leangui.context.IActionContextHandlersProvider;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
 
 import java.util.List;
 

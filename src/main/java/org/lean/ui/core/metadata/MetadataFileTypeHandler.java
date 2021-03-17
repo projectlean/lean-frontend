@@ -5,8 +5,8 @@ import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.core.variables.Variables;
 import org.lean.ui.leangui.context.IGuiContextHandler;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
-import org.lean.ui.leangui.file.presentation.ILeanFileType;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.file.ILeanFileType;
 
 import java.util.ArrayList;
 import java.util.Collections;

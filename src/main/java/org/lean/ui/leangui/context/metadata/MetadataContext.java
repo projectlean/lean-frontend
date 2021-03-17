@@ -10,7 +10,7 @@ import org.lean.ui.layout.LeanGuiLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-@VaadinSessionScope
+//@VaadinSessionScope
 public class MetadataContext implements IActionContextHandlersProvider {
 
     private LeanGuiLayout leanGuiLayout;

@@ -1,11 +1,14 @@
 package org.lean.ui.leangui.delegates;
 
+import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.gui.Point;
 import org.apache.hop.core.gui.plugin.action.GuiActionType;
 import org.lean.ui.LeanGui;
 import org.lean.ui.leangui.context.GuiContextUtil;
 import org.lean.ui.layout.LeanGuiLayout;
 
+//@UIScope
 public class LeanGuiContextDelegate {
 
     private LeanGuiLayout leanGuiLayout;
@@ -24,7 +27,7 @@ public class LeanGuiContextDelegate {
         int x = 50;
         int y = 50;
         LeanGui leanGui;
-        GuiContextUtil.getInstance().handleActionSelection("Select the item to create", new Point(x, y), leanGuiLayout, GuiActionType.Create, "FileNew", true);
+        GuiContextUtil.getInstance().handleActionSelection(leanGuiLayout, "Select the item to create", new Point(x, y), leanGuiLayout, GuiActionType.Create, "FileNew", true);
 
     }
 }

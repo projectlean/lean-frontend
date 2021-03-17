@@ -8,8 +8,8 @@ import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
-import org.lean.ui.plugins.perspective.BasePerspective;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
 
@@ -24,7 +24,7 @@ import java.util.List;
 )
 @Route(value="console", layout = LeanGuiLayout.class)
 @GuiPlugin(description = "This perspective allows you to create a home perspective")
-public class ConsolePerspective extends BasePerspective implements ILeanPerspective {
+public class ConsolePerspective extends LeanPerspectiveBase implements ILeanPerspective {
 
     private LeanGuiLayout leanGuiLayout;
 

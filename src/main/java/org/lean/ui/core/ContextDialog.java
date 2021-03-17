@@ -1,9 +1,18 @@
 package org.lean.ui.core;
 
+import com.vaadin.flow.component.DomEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.Const;
 import org.apache.hop.core.SwtUniversalImage;
@@ -13,24 +22,29 @@ import org.apache.hop.core.gui.Point;
 import org.apache.hop.core.gui.Rectangle;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
 import org.apache.hop.core.gui.plugin.action.GuiAction;
-import org.apache.hop.core.gui.plugin.toolbar.GuiToolbarElement;
-import org.apache.hop.core.gui.plugin.toolbar.GuiToolbarElementType;
 import org.apache.hop.core.logging.LogChannel;
 import org.apache.hop.history.AuditManager;
 import org.apache.hop.history.AuditState;
 import org.apache.hop.ui.core.gui.HopNamespace;
+import org.eclipse.swt.internal.C;
 import org.lean.core.VaadinUniversalImage;
+import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
+import org.lean.core.gui.plugin.toolbar.GuiToolbarElementType;
 import org.lean.ui.core.dialog.ErrorDialog;
 import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
+import org.lean.ui.layout.LeanGuiLayout;
 import org.lean.ui.util.VaadinSvgImageUtil;
 
 import java.util.*;
 import java.util.List;
 
 @GuiPlugin(description = "This dialog presents you all the actions you can take in a given context")
-public class ContextDialog {
+//@VaadinSessionScope
+public class ContextDialog extends Dialog {
 
+    private static final String CONTEXT_DIALOG_ID = UUID.randomUUID().toString();
+    private static LeanGuiLayout leanGuiLayout;
     public static final String CATEGORY_OTHER = "Other";
 
     public static final String GUI_PLUGIN_TOOLBAR_PARENT_ID = "ContextDialog-Toolbar";
@@ -49,9 +63,11 @@ public class ContextDialog {
     private String contextId;
     private PropsUi props;
     private TextField wSearch;
-    private Label wlTooltip;
+    private TextArea wlTooltip;
 //    private Canvas wCanvas;
 //    private ScrolledComposite wScrolledComposite;
+
+    private VerticalLayout contextDialogVl;
 
     private int iconSize;
 
@@ -232,10 +248,15 @@ public class ContextDialog {
 */
     }
 
-    public ContextDialog(
+    public ContextDialog(LeanGuiLayout leanGuiLayout,
             String title, Point location, List<GuiAction> actions, String contextId) {
         super();
 
+        this.leanGuiLayout = leanGuiLayout;
+
+        this.setWidth("50vw");
+        this.setHeight("50vh");
+        this.setResizable(true);
 //        this.setText(title);
         this.location = location;
         this.actions = actions;
@@ -248,23 +269,13 @@ public class ContextDialog {
 
         // Make the icons a bit smaller to fit more
         //
-        iconSize = (int) Math.round(props.getZoomFactor() * props.getIconSize() * 0.75);
+//        iconSize = (int) Math.round(props.getZoomFactor() * props.getIconSize() * 0.75);
+        iconSize = 100;
         margin = (int) (Const.MARGIN * props.getZoomFactor());
 //        highlightColor = new Color(parent.getDisplay(), 201, 232, 251);
-    }
 
-    public GuiAction open() {
-
-//        shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.RESIZE);
-//        shell.setText(getText());
-//        shell.setMinimumSize(new org.eclipse.swt.graphics.Point(200, 180));
-//        shell.setImage(GuiResource.getInstance().getImageHop());
-//        shell.setLayout(new FormLayout());
-//
-//        Display display = shell.getDisplay();
-
-        xMargin = 3 * margin;
-        yMargin = 2 * margin;
+        contextDialogVl = new VerticalLayout();
+        add(contextDialogVl);
 
         // Let's take a look at the list of actions and see if we've got categories to use...
         //
@@ -288,6 +299,20 @@ public class ContextDialog {
 
         categories.sort(Comparator.comparing(o -> o.order));
 
+        // Add a description label at the bottom...
+        //
+        wlTooltip = new TextArea();
+        wlTooltip.setWidthFull();
+        wlTooltip.setHeight("10%");
+        wlTooltip.setReadOnly(true);
+
+
+        FlexLayout itemsLayout = new FlexLayout();
+        itemsLayout.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+        itemsLayout.setSizeFull();
+//        HorizontalLayout tmpDiv = new HorizontalLayout();
+//        tmpDiv.setSizeFull();
+
         // Load the action images
         //
         items.clear();
@@ -296,48 +321,59 @@ public class ContextDialog {
             if (classLoader == null) {
                 classLoader = ClassLoader.getSystemClassLoader();
             }
-            VaadinUniversalImage universalImage =
-                    VaadinSvgImageUtil.getUniversalImage(classLoader, action.getImage());
-            Image image = universalImage.getAsBitmapForSize(iconSize, iconSize);
-            items.add(new ContextDialog.Item(action, image));
+            Image image = new Image("frontend/images/" + action.getImage(), "");
+            image.setWidth(iconSize + "px");
+            image.setHeight(iconSize + "px");
+            ContextDialog.Item item = new ContextDialog.Item(action, image);
+            items.add(item);
+
+            Div itemDiv = new Div(image);
+            itemDiv.getStyle().set("margin", "15px");
+            itemDiv.getElement().addEventListener("mouseover", e -> {
+                wlTooltip.setValue(action.getTooltip());
+            });
+            itemDiv.addClickListener(e -> {
+                item.getAction();
+            });
+
+
+            itemsLayout.add(itemDiv);
         }
+
 
         // Create a toolbar at the top of the main composite...
         //
         toolBar = new LeanToolbar(LeanToolbar.ORIENTATION.HORIZONTAL);
-//        toolBarWidgets = new GuiToolbarWidgets();
+        toolBarWidgets = new GuiToolbarWidgets(leanGuiLayout.getLeanGuiLayoutId());
         toolBarWidgets.registerGuiPluginObject(this);
         toolBarWidgets.createToolbarWidgets(toolBar, GUI_PLUGIN_TOOLBAR_PARENT_ID);
+        contextDialogVl.add(toolBar);
 
         recallToolbarSettings();
 
         // Add a search bar at the top...
         //
-//        Composite searchComposite = new Composite(shell, SWT.NONE);
-//        searchComposite.setLayout(new GridLayout(2, false));
-//        props.setLook(searchComposite);
-//        FormData fdlSearchComposite = new FormData();
-//        fdlSearchComposite.top = new FormAttachment(toolBar, 0);
-//        fdlSearchComposite.left = new FormAttachment(0, 0);
-//        fdlSearchComposite.right = new FormAttachment(100, 0);
-//        searchComposite.setLayoutData(fdlSearchComposite);
+        Label searchLabel = new Label("Search");
+        TextField wlSearch = new TextField();
+        wlSearch.setWidthFull();
+        HorizontalLayout searchHL = new HorizontalLayout();
+        searchHL.setHeight(ConstUi.HBAR_HEIGHT);
+        searchHL.setWidthFull();
+        searchHL.add(searchLabel, wlSearch);
+        contextDialogVl.add(searchHL);
 
-        Label wlSearch = new Label();
-        wlSearch.setText("Search ");
+        contextDialogVl.add(itemsLayout);
 
-//        wSearch = new Text();
-//        wSearch.setLayoutData(new GridData(GridData.FILL_BOTH));
+        contextDialogVl.add(wlTooltip);
 
-        // Add a description label at the bottom...
-        //
-        wlTooltip = new Label();
-//        FormData fdlTooltip = new FormData();
-//        fdlTooltip.left = new FormAttachment(0, Const.FORM_MARGIN);
-//        fdlTooltip.right = new FormAttachment(100, -Const.FORM_MARGIN);
-//        fdlTooltip.top =
-//                new FormAttachment(100, -Const.FORM_MARGIN - (int) (props.getZoomFactor() * 50));
-//        fdlTooltip.bottom = new FormAttachment(100, -Const.FORM_MARGIN);
-//        wlTooltip.setLayoutData(fdlTooltip);
+
+    }
+
+    public GuiAction openContextDialog() {
+
+        xMargin = 3 * margin;
+        yMargin = 2 * margin;
+
 
         // The rest of the dialog is used to draw the actions...
         //
@@ -516,6 +552,7 @@ public class ContextDialog {
         activeInstance = null;
 */
 
+        open();
         return selectedAction;
     }
 
@@ -616,7 +653,7 @@ public class ContextDialog {
             root = GUI_PLUGIN_TOOLBAR_PARENT_ID,
             id = TOOLBAR_ITEM_COLLAPSE_ALL,
             toolTip = "Collapse all categories",
-            image = "ui/images/collapse-all.svg")
+            image = "frontend/images/collapse-all.svg")
     public void collapseAll() {
         for (ContextDialog.CategoryAndOrder category : categories) {
             category.setCollapsed(true);
@@ -628,7 +665,7 @@ public class ContextDialog {
             root = GUI_PLUGIN_TOOLBAR_PARENT_ID,
             id = TOOLBAR_ITEM_EXPAND_ALL,
             toolTip = "Expand all categories",
-            image = "ui/images/expand-all.svg")
+            image = "frontend/images/expand-all.svg")
     public void expandAll() {
         for (ContextDialog.CategoryAndOrder category : categories) {
             category.setCollapsed(false);
@@ -647,21 +684,19 @@ public class ContextDialog {
 //        wSearch.setFocus();
     }
 
-/*
-    private Button getCategoriesCheckBox() {
-        ToolItem checkboxItem = toolBarWidgets.findToolItem(TOOLBAR_ITEM_ENABLE_CATEGORIES);
+    private Checkbox getCategoriesCheckBox() {
+        Checkbox checkboxItem = (Checkbox) toolBarWidgets.findToolItem(TOOLBAR_ITEM_ENABLE_CATEGORIES);
         if (checkboxItem == null) {
             return null;
         }
-        return (Button) checkboxItem.getControl();
+        return checkboxItem;
     }
-*/
 
     @GuiToolbarElement(
             root = GUI_PLUGIN_TOOLBAR_PARENT_ID,
             id = TOOLBAR_ITEM_CLEAR_SEARCH,
             toolTip = "Clear search filter",
-            image = "ui/images/clear-text.svg",
+            image = "frontend/images/clear-text.svg",
             separator = true)
     public void clearSearchFilter() {
         /*wSearch.setText("");*/
@@ -670,11 +705,10 @@ public class ContextDialog {
     /**
      * This is where all the actions are drawn
      *
-     * @param event
+//     * @param event
      */
+    private void onPaint(/*PaintEvent event*/) {
 /*
-    private void onPaint(PaintEvent event) {
-
         // Do double buffering to prevent flickering on Windows
         //
         boolean needsDoubleBuffering =
@@ -687,18 +721,18 @@ public class ContextDialog {
             image = new Image(shell.getDisplay(), event.width, event.height);
             gc = new GC(image);
         }
-
+*/
         boolean useCategories;
 
-        Button categoriesCheckBox = getCategoriesCheckBox();
+        Checkbox categoriesCheckBox = getCategoriesCheckBox();
         if (categoriesCheckBox == null) {
             useCategories = true;
         } else {
-            useCategories = categoriesCheckBox.getSelection();
+            useCategories = categoriesCheckBox.getValue();
         }
         useCategories &= !categories.isEmpty();
         updateToolbar();
-
+/*
         // Fill everything with white...
         //
         gc.setForeground(GuiResource.getInstance().getColorBlack());
@@ -899,16 +933,14 @@ public class ContextDialog {
             gc.dispose();
             image.dispose();
         }
-    }
 */
+    }
 
     private void updateToolbar() {
-/*
-        Button categoriesCheckBox = getCategoriesCheckBox();
-        boolean categoriesEnabled = categoriesCheckBox != null && categoriesCheckBox.getSelection();
+        Checkbox categoriesCheckBox = getCategoriesCheckBox();
+        boolean categoriesEnabled = categoriesCheckBox != null && categoriesCheckBox.getValue();
         toolBarWidgets.enableToolbarItem(TOOLBAR_ITEM_COLLAPSE_ALL, categoriesEnabled);
         toolBarWidgets.enableToolbarItem(TOOLBAR_ITEM_EXPAND_ALL, categoriesEnabled);
-*/
     }
 
     private List<ContextDialog.Item> findItemsForCategory(ContextDialog.CategoryAndOrder categoryAndOrder) {
@@ -932,10 +964,10 @@ public class ContextDialog {
         }
 
         if (selectedItem == null) {
-            wlTooltip.setText("");
+            wlTooltip.setValue("");
         } else {
             this.selectedItem = selectedItem;
-            wlTooltip.setText(Const.NVL(selectedItem.getAction().getTooltip(), ""));
+            wlTooltip.setValue(Const.NVL(selectedItem.getAction().getTooltip(), ""));
             selectedItem.setSelected(true);
 
             // See if we need to show the selected item.

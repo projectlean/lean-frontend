@@ -36,8 +36,8 @@ import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.core.metadata.MetadataManager;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.leangui.file.ILeanFileTypeHandler;
-import org.lean.ui.plugins.perspective.BasePerspective;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
 
@@ -52,7 +52,7 @@ import java.util.*;
 )
 @GuiPlugin(description = "This perspective allows you to modify different types of metadata")
 @Route(value="metadata", layout = LeanGuiLayout.class)
-public class MetadataPerspective extends BasePerspective implements ILeanPerspective {
+public class MetadataPerspective extends LeanPerspectiveBase implements ILeanPerspective {
 
     private static final String METADATA_PERSPECTIVE_TREE = "Metadata perspective tree";
 
