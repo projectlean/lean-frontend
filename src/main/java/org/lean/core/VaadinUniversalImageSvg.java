@@ -41,24 +41,8 @@ public class VaadinUniversalImageSvg extends VaadinUniversalImage{
     }
 
     // TODO: Swing --> remove?
-/*
-    @Override
-    protected Image renderSimple( ) {
-        return null;
-        return renderSimple( device, (int) Math.round( svgGraphicsSize.getWidth() ), (int) Math.round( svgGraphicsSize.getHeight() ) );
-    }
-*/
-
-    // TODO: Swing --> remove?
     @Override
     protected Image renderSimple(int width, int height ) {
-//        BufferedImage area = SwingUniversalImage.createBitmap( width, height );
-//        Graphics2D gc = SwingUniversalImage.createGraphics( area );
-//        SwingUniversalImageSvg.render( gc, svgGraphicsNode, svgGraphicsSize, width / 2, height / 2, width, height, 0 );
-//        gc.dispose();
-//
-//        return swing2swt( device, area );
-//        return null;
 
         Image image = new Image(svgImage.getDocument().toString(), "");
         image.setWidth(width + "px");
@@ -70,17 +54,6 @@ public class VaadinUniversalImageSvg extends VaadinUniversalImage{
     // TODO: Swing --> remove?
     @Override
     protected Image renderRotated(int width, int height, double angleRadians ) {
-/*
-        BufferedImage doubleArea = SwingUniversalImage.createDoubleBitmap( width, height );
-
-        Graphics2D gc = SwingUniversalImage.createGraphics( doubleArea );
-        SwingUniversalImageSvg.render( gc, svgGraphicsNode, svgGraphicsSize, doubleArea.getWidth() / 2, doubleArea
-                .getHeight() / 2, width, height, angleRadians );
-
-        gc.dispose();
-
-        return swing2swt( device, doubleArea );
-*/
         return null;
     }
 

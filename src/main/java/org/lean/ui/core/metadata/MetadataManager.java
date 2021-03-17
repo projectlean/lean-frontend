@@ -124,12 +124,6 @@ public class MetadataManager<T extends IHopMetadata> {
 
     public void /*boolean*/ editMetadata( String elementName ) {
 
-/*
-        if ( StringUtils.isEmpty( elementName ) ) {
-            return false;
-        }
-*/
-
         try {
             IHopMetadataSerializer<T> serializer = metadataProvider.getSerializer( managedClass );
 
@@ -149,21 +143,8 @@ public class MetadataManager<T extends IHopMetadata> {
             MetadataEditorDialog dialog = new MetadataEditorDialog(editor);
             dialog.open();
 
-/*
-            String result = dialog.open();
-
-            if (result != null) {
-                ExtensionPointHandler.callExtensionPoint(
-                        hopGui.getLog(), variables, HopExtensionPoint.HopGuiMetadataObjectUpdated.id, element );
-                return true;
-            } else {
-                return false;
-            }
-*/
-
         } catch ( Exception e ) {
             new ErrorDialog("Error", "Error editing metadata", e );
-//            return false;
         }
     }
 
@@ -221,12 +202,6 @@ public class MetadataManager<T extends IHopMetadata> {
 
     public void /*boolean*/ deleteMetadata( String elementName ) {
 
-/*
-        if ( StringUtils.isEmpty( elementName ) ) {
-            return false;
-        }
-*/
-
         MessageBox confirmBox = new MessageBox(MessageBox.MessageType.CONFIRM, "Delete?", "Are you sure you want to delete element " + elementName + "?", "Delete", e -> {
             try {
                 IHopMetadataSerializer<T> serializer = getSerializer();
@@ -241,15 +216,11 @@ public class MetadataManager<T extends IHopMetadata> {
 
                 ExtensionPointHandler.callExtensionPoint( leanGuiLayout.getLog(), variables, HopExtensionPoint.HopGuiMetadataObjectDeleted.id, object );
 
-//                return true;
-
             } catch ( Exception ex ) {
                 new ErrorDialog("Error", "Error deleting metadata element " + elementName, ex );
-//                return false;
             }
         }, "Cancel", e -> { if(e.getSource().isOpened()){ e.getSource().close(); }});
         confirmBox.open();
-//        return false;
     }
 
 

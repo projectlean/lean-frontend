@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.hop.core.Const;
 import org.apache.hop.core.database.Database;
 import org.apache.hop.core.database.DatabaseMeta;
-import org.apache.hop.core.encryption.HopTwoWayPasswordEncoder;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.logging.LoggingObject;
 import org.apache.hop.core.variables.IVariables;
@@ -15,7 +14,6 @@ import org.apache.hop.metadata.api.HopMetadata;
 import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
-import org.apache.hop.metadata.serializer.json.JsonMetadataProvider;
 import org.apache.hop.metadata.serializer.memory.MemoryMetadataProvider;
 import org.lean.core.LeanColorRGB;
 import org.lean.core.LeanDatabaseConnection;
@@ -24,9 +22,7 @@ import org.lean.presentation.LeanPresentation;
 import org.lean.presentation.component.LeanComponent;
 import org.lean.presentation.connector.LeanConnector;
 import org.lean.presentation.theme.LeanTheme;
-import org.lean.ui.plugins.perspective.LeanPerspectiveManager;
 
-import javax.servlet.annotation.WebServlet;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -70,7 +66,6 @@ public class LeanMetadataUtil {
             }
             folder=configDirectory+"metadata";
         }
-//        return new JsonMetadataProvider( new HopTwoWayPasswordEncoder(), folder, variables );
         return new MemoryMetadataProvider();
     }
 
@@ -101,18 +96,6 @@ public class LeanMetadataUtil {
 
             createTestPresentations();
             createTestThemes();
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("######################################################################");
-            System.out.println("presentations: " + presentationSerializer.loadAll().size());
-            System.out.println("connectors: " + connectorSerializer.loadAll().size());
-            System.out.println("databases: " + databaseSerializer.loadAll().size());
-            System.out.println("themes: " + themeSerializer.loadAll().size());
 
         }catch(HopException e){
             e.printStackTrace();
@@ -142,10 +125,6 @@ public class LeanMetadataUtil {
                     connectorSerializer.save(connector);
                 }
                 List<LeanComponent> componentList = pres.getPages().get(0).getComponents();
-//                Iterator<LeanComponent> componentIterator = componentList.iterator();
-//                while(componentIterator.hasNext()){
-//                    componentSerializer.save(componentIterator.next());
-//                }
 
                 presentationSerializer.save(pres);
             }catch(Exception e){
@@ -160,7 +139,6 @@ public class LeanMetadataUtil {
                 "logging", "postgres", "postgres");
 
         String h2DatabaseName = System.getProperty("java.io.tmpdir") + File.separator + CONNECTOR_STEEL_WHEELS_NAME;
-//        connection2.setName();
 
         LeanDatabaseConnection swConnection = new LeanDatabaseConnection(CONNECTOR_STEEL_WHEELS_NAME,  "H2", null, null, h2DatabaseName , null, null);
 

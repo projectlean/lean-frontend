@@ -75,14 +75,6 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
         //
         guiToolBarMap.put(toolbarItem.getId(), toolbarItem);
 
-/*
-        if (!(parent instanceof LeanToolbar)) {
-            throw new RuntimeException(
-                    "We can only add toolbar items to a toolbar, not class " + parent.getClass().getName());
-        }
-*/
-//        LeanToolbar toolBar = (LeanToolbar) parent;
-
         PropsUi props = PropsUi.getInstance();
 
         // We want to add a separator if the annotation asked for it
@@ -143,16 +135,6 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
                 // TODO: check if there is a possibility/need to set tooltips on combo boxes in Vaadin
                 combo.setItems(getComboItems(toolbarItem));
                 // TODO: implement combobox width
-//                comboSeparator.setWidth(
-//                        calculateComboWidth(combo)
-//                                + toolbarItem.getExtraWidth()); // extra room for widget decorations
-//                comboSeparator.setControl(combo);
-//                listener =
-//                        getListener(
-//                                toolbarItem.getClassLoader(),
-//                                toolbarItem.getListenerClass(),
-//                                toolbarItem.getListenerMethod());
-//                combo.addListener(SWT.Selection, listener);
                 toolItemMap.put(toolbarItem.getId(), comboSeparator);
                 widgetsMap.put(toolbarItem.getId(), combo);
                 toolBar.add(comboSeparator, combo);
@@ -162,25 +144,7 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
                 Hr checkboxSeparator = new Hr();
                 Checkbox checkbox = new Checkbox();
                 checkbox.getElement().setProperty("title", toolbarItem.getToolTip());
-/*
-                ToolItem checkboxSeparator = new ToolItem(toolBar, SWT.SEPARATOR);
-                Button checkbox =
-                        new Button(parent, SWT.CHECK | (toolbarItem.isAlignRight() ? SWT.RIGHT : SWT.LEFT));
-                checkbox.setToolTipText(Const.NVL(toolbarItem.getToolTip(), ""));
-                checkbox.setText(Const.NVL(toolbarItem.getLabel(), ""));
-                checkbox.setBackground(toolBar.getBackground());
-                checkbox.pack();
-                checkboxSeparator.setWidth(
-                        checkbox.getSize().x
-                                + toolbarItem.getExtraWidth()); // extra room for widget decorations
-                checkboxSeparator.setControl(checkbox);
-                listener =
-                        getListener(
-                                toolbarItem.getClassLoader(),
-                                toolbarItem.getListenerClass(),
-                                toolbarItem.getListenerMethod());
-                checkbox.addListener(SWT.Selection, listener);
-*/
+
                 toolItemMap.put(toolbarItem.getId(), checkboxSeparator);
                 widgetsMap.put(toolbarItem.getId(), checkbox);
                 toolBar.add(checkboxSeparator, checkbox);
@@ -190,19 +154,6 @@ public class GuiToolbarWidgets extends BaseGuiWidgets {
                 break;
         }
     }
-
-/*
-    private int calculateComboWidth(ComboBox<String[]> combo) {
-        String maxWidth = combo.getMaxWidth();
-        for (String item : combo.getItems()) {
-            int width = TextSizeUtilFacade.textExtent(item).x;
-            if (width > maxWidth) {
-                maxWidth = width;
-            }
-        }
-        return maxWidth;
-    }
-*/
 
     public void enableToolbarItem(String id, boolean enabled) {
         Component toolItem = toolItemMap.get(id);

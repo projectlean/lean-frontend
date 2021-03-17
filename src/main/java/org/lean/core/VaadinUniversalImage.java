@@ -17,27 +17,6 @@ public abstract class VaadinUniversalImage {
 
     protected abstract Image renderRotated(int width, int height, double angleRadians );
 
-/*
-    public synchronized void dispose() {
-        if ( cache == null ) {
-            return;
-        }
-
-        for ( Image img : cache.values() ) {
-            if ( !img.isDisposed() ) {
-                img.dispose();
-            }
-        }
-        cache = null;
-    }
-
-    private void checkDisposed() {
-        if ( cache == null ) {
-            throw new RuntimeException( "Already disposed" );
-        }
-    }
-*/
-
     /**
      * Method getAsBitmapForSize(..., angle) can't be called, because it returns bigger picture.
     */

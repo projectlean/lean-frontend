@@ -133,12 +133,6 @@ public class LeanDatabaseConnectionEditor extends MetadataEditor<LeanDatabaseCon
 
             String title = success ? BaseMessages.getString( PKG, "DatabaseDialog.DatabaseConnectionTestSuccess.title" )
                     : BaseMessages.getString( PKG, "DatabaseDialog.DatabaseConnectionTest.title" );
-//            if ( success && message.contains( Const.CR ) ) {
-//                message.replaceAll(Const.CR, "<br />");
-//                message = message.substring( 0, message.indexOf( Const.CR ) )
-//                        + "<br />" + message.substring( message.indexOf( Const.CR ) );
-//                message = message.substring( 0, message.lastIndexOf( Const.CR ) );
-//            }
             ShowMessageDialog msgDialog = new ShowMessageDialog(VaadinIcon.INFO.ordinal() | VaadinIcon.CHECK.ordinal(),
                     title, message, message.length() > 300 );
             msgDialog.setType( success ? Const.SHOW_MESSAGE_DIALOG_DB_TEST_SUCCESS

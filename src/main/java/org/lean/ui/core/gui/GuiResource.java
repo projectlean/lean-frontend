@@ -68,16 +68,6 @@ public class GuiResource {
 
     }
 
-/*
-    private static final ISingletonProvider PROVIDER;
-    static {
-        PROVIDER = (ISingletonProvider) ImplementationLoader.newInstance( GuiResource.class );
-    }
-    public static final GuiResource getInstance() {
-        return (GuiResource) PROVIDER.getInstanceInternal();
-    }
-*/
-
     public static GuiResource getInstance(){
         if(guiResource == null){
             guiResource = new GuiResource();

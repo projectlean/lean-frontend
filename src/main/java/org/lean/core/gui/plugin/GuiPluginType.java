@@ -11,7 +11,6 @@ public class GuiPluginType extends BasePluginType<GuiPlugin> implements IPluginT
 
     private GuiPluginType(){
         super(GuiPlugin.class, "GUI", "GUI");
-//        populateFolders("gui");
     }
 
     public static GuiPluginType getInstance(){

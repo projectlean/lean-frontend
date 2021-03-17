@@ -36,10 +36,6 @@ public class BaseDialog extends Dialog {
     public static final int MEDIUM_SMALL_FIELD = 150;
     public static final int SMALL_FIELD = 50;
     public static final int SHELL_WIDTH_OFFSET = 16;
-//    public static final String VAR_ICON_WIDTH = GuiResource.getInstance().getImageVariable().getWidth();
-//    public static final String VAR_ICON_HEIGHT = GuiResource.getInstance().getImageVariable().getHeight();
-
-//    protected Map<String, Listener> buttons = new HashMap();
 
     protected PropsUi props;
     protected int width = -1;
@@ -53,7 +49,6 @@ public class BaseDialog extends Dialog {
 
     public BaseDialog(String title, final int width){
         super();
-//        this.props = Pro
         this.title = title;
         this.width = width;
     }
@@ -140,15 +135,8 @@ public class BaseDialog extends Dialog {
             String[] filterNames,
             boolean folderAndFile) {
 
-//        boolean useNativeFileDialog = "Y".equalsIgnoreCase(
-//                                HopGui.getInstance().getVariables().getVariable("HOP_USE_NATIVE_FILE_DIALOG", "N"));
-
         IFileDialog dialog;
 
-//        if (useNativeFileDialog) {
-//            FileDialog fileDialog = new FileDialog(shell, save ? SWT.SAVE : SWT.OPEN);
-//            dialog = new NativeFileDialog(fileDialog);
-//        } else {
         LeanVfsFileDialog vfsDialog = new LeanVfsFileDialog(leanGuiLayout, variables, fileObject, false, save);
         if (save) {
             if (fileObject != null) {
@@ -169,7 +157,6 @@ public class BaseDialog extends Dialog {
             }
         }
             dialog = vfsDialog;
-//        }
 
             if (save) {
                 dialog.setText(BaseMessages.getString(PKG, "BaseDialog.SaveFile"));

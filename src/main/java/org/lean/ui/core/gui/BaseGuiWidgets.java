@@ -2,18 +2,14 @@ package org.lean.ui.core.gui;
 
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.logging.ILogChannel;
 import org.apache.hop.core.logging.LogChannel;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.lean.core.exception.LeanException;
 import org.lean.core.gui.plugin.GuiRegistry;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarItem;
-import org.lean.ui.LeanGui;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.plugins.perspective.presentation.PresentationPerspective;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -46,26 +42,9 @@ public class BaseGuiWidgets {
 
         GuiRegistry guiRegistry = GuiRegistry.getInstance();
         String guiPluginClassName = guiPluginObject.getClass().getName();
-//        PresentationPerspective presentationPerspective = (PresentationPerspective)guiPluginObject;
         guiRegistry.registerGuiPluginObject(
                 leanGuiLayoutId, guiPluginClassName, instanceId, guiPluginObject);
     }
-
-/*
-    protected void addDeRegisterGuiPluginObjectListener(Control control) {
-        control.addDisposeListener(
-                e ->
-                        GuiRegistry.getInstance()
-                                .removeGuiPluginObjects(LeanGui.getInstance().getLeanGuiId(), instanceId));
-    }
-*/
-
-/*
-    public void dispose() {
-        String hopGuiId = LeanGuiLayout.getLeanGuiLayoutId();
-        GuiRegistry.getInstance().removeGuiPluginObjects(hopGuiId, instanceId);
-    }
-*/
 
     protected Object findGuiPluginInstance(ClassLoader classLoader, String listenerClassName)
             throws Exception {
