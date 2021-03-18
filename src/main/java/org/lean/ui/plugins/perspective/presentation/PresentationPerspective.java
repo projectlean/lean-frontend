@@ -48,7 +48,7 @@ public class PresentationPerspective extends LeanPerspectiveBase implements ILea
 
     @Override
     public void activate() {
-        LeanGuiLayout.perspectiveManager.setActivePerspective(this);
+        leanGuiLayout.perspectiveManager.setActivePerspective(this);
     }
 
     @Override

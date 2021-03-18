@@ -21,6 +21,7 @@ import org.apache.hop.core.gui.AreaOwner;
 import org.apache.hop.core.gui.Point;
 import org.apache.hop.core.gui.Rectangle;
 import org.apache.hop.core.gui.plugin.GuiPlugin;
+//import org.apache.hop.core.gui.plugin.action.GuiAction;
 import org.apache.hop.core.gui.plugin.action.GuiAction;
 import org.apache.hop.core.logging.LogChannel;
 import org.apache.hop.history.AuditManager;
@@ -104,6 +105,8 @@ public class ContextDialog extends Dialog {
     private GuiToolbarWidgets toolBarWidgets;
 
     private static ContextDialog activeInstance;
+
+    private FlexLayout itemsLayout;
 
     private enum OwnerType {
         CATEGORY,
@@ -307,38 +310,12 @@ public class ContextDialog extends Dialog {
         wlTooltip.setReadOnly(true);
 
 
-        FlexLayout itemsLayout = new FlexLayout();
+        itemsLayout = new FlexLayout();
         itemsLayout.setFlexWrap(FlexLayout.FlexWrap.WRAP);
         itemsLayout.setSizeFull();
 //        HorizontalLayout tmpDiv = new HorizontalLayout();
 //        tmpDiv.setSizeFull();
 
-        // Load the action images
-        //
-        items.clear();
-        for (GuiAction action : actions) {
-            ClassLoader classLoader = action.getClassLoader();
-            if (classLoader == null) {
-                classLoader = ClassLoader.getSystemClassLoader();
-            }
-            Image image = new Image("frontend/images/" + action.getImage(), "");
-            image.setWidth(iconSize + "px");
-            image.setHeight(iconSize + "px");
-            ContextDialog.Item item = new ContextDialog.Item(action, image);
-            items.add(item);
-
-            Div itemDiv = new Div(image);
-            itemDiv.getStyle().set("margin", "15px");
-            itemDiv.getElement().addEventListener("mouseover", e -> {
-                wlTooltip.setValue(action.getTooltip());
-            });
-            itemDiv.addClickListener(e -> {
-                item.getAction();
-            });
-
-
-            itemsLayout.add(itemDiv);
-        }
 
 
         // Create a toolbar at the top of the main composite...
@@ -369,11 +346,43 @@ public class ContextDialog extends Dialog {
 
     }
 
+
+    public GuiAction getSelectedAction(){
+        return selectedAction;
+    }
+
     public GuiAction openContextDialog() {
 
         xMargin = 3 * margin;
         yMargin = 2 * margin;
 
+        // Load the action images
+        //
+        items.clear();
+        for (GuiAction action : actions) {
+            ClassLoader classLoader = action.getClassLoader();
+            if (classLoader == null) {
+                classLoader = ClassLoader.getSystemClassLoader();
+            }
+            Image image = new Image("frontend/images/" + action.getImage(), "");
+            image.setWidth(iconSize + "px");
+            image.setHeight(iconSize + "px");
+            ContextDialog.Item item = new ContextDialog.Item(action, image);
+            items.add(item);
+
+            Div itemDiv = new Div(image);
+            itemDiv.getStyle().set("margin", "15px");
+            itemDiv.getElement().addEventListener("mouseover", e -> {
+                wlTooltip.setValue(action.getTooltip());
+            });
+            itemDiv.addClickListener(e -> {
+                selectedAction = item.getAction();
+                close();
+            });
+
+
+            itemsLayout.add(itemDiv);
+        }
 
         // The rest of the dialog is used to draw the actions...
         //

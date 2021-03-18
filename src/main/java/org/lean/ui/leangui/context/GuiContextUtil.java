@@ -2,6 +2,7 @@ package org.lean.ui.leangui.context;
 
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.gui.Point;
+import org.apache.hop.core.gui.plugin.IGuiActionLambda;
 import org.apache.hop.core.gui.plugin.action.GuiAction;
 import org.apache.hop.core.gui.plugin.action.GuiActionType;
 import org.lean.ui.core.ContextDialog;
@@ -117,13 +118,18 @@ public class GuiContextUtil {
                 }
 
                 ContextDialog contextDialog = new ContextDialog(leanGuiLayout, message, clickLocation, actions, contextHandler.getContextId() );
-                GuiAction selectedAction = contextDialog.openContextDialog();
-//                if ( selectedAction != null ) {
-//                    IGuiActionLambda<?> actionLambda = selectedAction.getActionLambda();
-//                    actionLambda.executeAction( contextDialog.isShiftClicked(), contextDialog.isCtrlClicked() );
-//                } else {
-//                    return contextDialog.isFocusLost();
-//                }
+                contextDialog.openContextDialog();
+                contextDialog.addOpenedChangeListener(e -> {
+                   if(!e.isOpened()){
+                       GuiAction selectedAction = contextDialog.getSelectedAction();
+                       if ( selectedAction != null ) {
+                           IGuiActionLambda<?> actionLambda = selectedAction.getActionLambda();
+                           actionLambda.executeAction( contextDialog.isShiftClicked(), contextDialog.isCtrlClicked() );
+                       } else {
+//                           return contextDialog.isFocusLost();
+                       }
+                   }
+                });
 //            }
 //        } catch ( Exception e ) {
 //            new ErrorDialog("Error", "An error occurred executing action", e );

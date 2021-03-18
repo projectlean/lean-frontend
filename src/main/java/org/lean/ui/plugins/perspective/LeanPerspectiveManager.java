@@ -40,7 +40,15 @@ public class LeanPerspectiveManager {
     public void setActivePerspective(ILeanPerspective perspective){
         for(ILeanPerspective leanPerspective : perspectivesMap.values()){
             if(leanPerspective.getClass().equals(perspective.getClass())) {
-                ((Component) perspective).setVisible(true);
+                // TODO: cycle through perspectives instead of removing and re-adding
+                leanGuiLayout.mainBody.removeAll();
+                leanGuiLayout.mainBody.add((Component) perspective);
+                ((Component)perspective).setVisible(true);
+                activePerspective = perspective;
+
+
+
+
 //            }else{
 //                ((Component) perspective).setVisible(false);
 /*
@@ -62,9 +70,11 @@ public class LeanPerspectiveManager {
         }
     }
 
+/*
     public ILeanPerspective getActivePerspective(){
         return activePerspective;
     }
+*/
 
     public boolean isActivePerspective(ILeanPerspective perspective){
         if(perspective != null){

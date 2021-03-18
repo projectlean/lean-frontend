@@ -193,9 +193,7 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
             perspectiveComponent.setVisible(false);
             Button perspectiveButton = new Button(perspectiveIcon);
             perspectiveButton.addClickListener(e -> {
-                mainBody.removeAll();
-                mainBody.add((Component) perspective);
-                ((Component)perspective).setVisible(true);
+                perspectiveManager.setActivePerspective(perspective);
                 activePerspective = perspective;
             });
             mainBody.add(perspectiveComponent);
