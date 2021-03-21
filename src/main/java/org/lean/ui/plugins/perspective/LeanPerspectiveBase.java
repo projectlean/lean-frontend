@@ -3,6 +3,7 @@ package org.lean.ui.plugins.perspective;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RoutePrefix;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
@@ -10,7 +11,7 @@ import org.lean.ui.LeanGui;
 import org.lean.ui.layout.LeanGuiLayout;
 
 //@VaadinSessionScope
-public abstract class LeanPerspectiveBase extends Composite<HorizontalLayout> implements ILeanPerspective{
+public abstract class LeanPerspectiveBase extends Composite<VerticalLayout> implements ILeanPerspective{
 
     public LeanGuiLayout leanGuiLayout;
 
@@ -19,6 +20,8 @@ public abstract class LeanPerspectiveBase extends Composite<HorizontalLayout> im
         getContent().setMargin(false);
         getContent().setPadding(false);
         getContent().setSpacing(false);
+
+
     }
 
     @Override

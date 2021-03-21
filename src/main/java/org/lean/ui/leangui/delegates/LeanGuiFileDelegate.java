@@ -56,7 +56,7 @@ public class LeanGuiFileDelegate {
                     + filename
                     + "'");
         }
-        ILeanFileTypeHandler fileTypeHandler = leanFile.openFile(null, filename, leanGuiLayout.getVariables());
+        ILeanFileTypeHandler fileTypeHandler = leanFile.openFile(leanGuiLayout, filename, leanGuiLayout.getVariables());
         leanGuiLayout.handleFileCapabilities(leanFile, false, false);
         return fileTypeHandler;
     }

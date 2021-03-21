@@ -15,6 +15,7 @@ import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.file.ILeanFileTypeHandler;
 import org.lean.ui.plugins.file.LeanFileTypeBase;
 import org.lean.ui.plugins.file.LeanFileTypePlugin;
+import org.lean.ui.plugins.perspective.TabItemHandler;
 import org.lean.ui.plugins.perspective.presentation.PresentationPerspective;
 
 import java.util.ArrayList;
@@ -77,23 +78,6 @@ public class LeanPresentationFileType<T extends LeanPresentation> extends LeanFi
     }
 
     @Override
-    public ILeanFileTypeHandler openFile(LeanGuiLayout leanGuiLayout, String filename, IVariables iVariables) throws HopException {
-        try{
-            // This file is opened in the Lean Presentation perspective
-            PresentationPerspective perspective = leanGuiLayout.getPresentationPerspective();
-            perspective.activate();
-
-            // See if the same presentation isn't already open.
-            // Other file types we might allow to open more than once but not presentations for now.
-            // TODO: switch to presentation tab etc
-
-            return null;
-        }catch(Exception e){
-            throw new HopException("Error opening presentation file '" + filename + "'", e);
-        }
-    }
-
-    @Override
     public ILeanFileTypeHandler newFile(LeanGuiLayout leanGuiLayout, IVariables iVariables) throws HopException {
         try{
             // This file is opened in the Lean Presentation perspective
@@ -107,6 +91,31 @@ public class LeanPresentationFileType<T extends LeanPresentation> extends LeanFi
 
         }catch(Exception e){
             throw new HopException("Error create new presentation", e);
+        }
+    }
+
+    @Override
+    public ILeanFileTypeHandler openFile(LeanGuiLayout leanGuiLayout, String filename, IVariables iVariables) throws HopException {
+        try{
+            // This file is opened in the Lean Presentation perspective
+            PresentationPerspective perspective = leanGuiLayout.getPresentationPerspective();
+            perspective.activate();
+
+            // See if the same presentation isn't already open.
+            // Other file types we might allow to open more than once but not presentations for now.
+            // TODO: check + fix
+            TabItemHandler tabItemHandlerWithFilename = perspective.findTabItemHandlerWithFilename(filename);
+            if(tabItemHandlerWithFilename != null){
+                perspective.switchToTab(tabItemHandlerWithFilename);
+                return tabItemHandlerWithFilename.getTypeHandler();
+            }
+
+            // fetch presentation + open
+            ILeanFileTypeHandler typeHandler = perspective.addPresentation(null);
+
+            return typeHandler;
+        }catch(Exception e){
+            throw new HopException("Error opening presentation file '" + filename + "'", e);
         }
     }
 
@@ -126,7 +135,7 @@ public class LeanPresentationFileType<T extends LeanPresentation> extends LeanFi
             "ui/images/presentation.svg",
                 (shiftClicked, controlClicked, parameters) -> {
                     try {
-                        LeanPresentationFileType.this.newFile(leanGuiLayout, leanGuiLayout.getVariables());
+                        newFile(leanGuiLayout, leanGuiLayout.getVariables());
                     } catch (Exception e) {
                         new ErrorDialog("Error", "Error creating new presentation.", e);
                     }
