@@ -19,6 +19,7 @@ public class LeanToolbar extends Composite<Div> {
 
     public LeanToolbar(){
         this(ORIENTATION.HORIZONTAL);
+        this.getContent().setSizeFull();
     }
 
     public LeanToolbar(ORIENTATION orientation){

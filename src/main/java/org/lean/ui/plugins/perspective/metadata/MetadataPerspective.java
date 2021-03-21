@@ -23,10 +23,12 @@ import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
 import org.apache.hop.metadata.util.HopMetadataUtil;
 import org.apache.hop.ui.core.metadata.MetadataFileType;
+import org.apache.hop.ui.hopgui.file.IHopFileType;
+import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.apache.hop.ui.hopgui.file.empty.EmptyFileType;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.core.metadata.LeanMetadataUtil;
-import org.lean.ui.context.IGuiContextHandler;
+import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.core.MetadataEditor;
 import org.lean.ui.core.PropsUi;
 import org.lean.ui.core.dialog.ErrorDialog;
@@ -34,7 +36,8 @@ import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.core.metadata.MetadataManager;
 import org.lean.ui.layout.LeanGuiLayout;
-import org.lean.ui.plugins.perspective.BasePerspective;
+import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
 
@@ -49,7 +52,7 @@ import java.util.*;
 )
 @GuiPlugin(description = "This perspective allows you to modify different types of metadata")
 @Route(value="metadata", layout = LeanGuiLayout.class)
-public class MetadataPerspective extends BasePerspective implements ILeanPerspective {
+public class MetadataPerspective extends LeanPerspectiveBase implements ILeanPerspective {
 
     private static final String METADATA_PERSPECTIVE_TREE = "Metadata perspective tree";
 
@@ -181,7 +184,7 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
     public void onNewMetadata(Class<IHopMetadata> metadataClass){
         System.out.println("Creating new " + metadataClass.getName());
-        MetadataManager<IHopMetadata> manager = new MetadataManager<>(leanGuiLayout, this, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
+        MetadataManager<IHopMetadata> manager = new MetadataManager<>(leanGuiLayout, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
         manager.newMetadataWithEditor();
 
     }
@@ -195,7 +198,7 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
             this.setActiveEditor(editor);
         }else{
             try{
-                MetadataManager<IHopMetadata> manager = new MetadataManager<>(leanGuiLayout, this, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
+                MetadataManager<IHopMetadata> manager = new MetadataManager<>(leanGuiLayout, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
                 manager.editWithEditor(displayName);
             }catch(Exception e){
                 new ErrorDialog("Error", "Error editing metadata", e);
@@ -243,6 +246,7 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
 
         TreeDataProvider<MetadataTreeGridHelper> metadataDataProvider = (TreeDataProvider<MetadataTreeGridHelper>)metadataTree.getDataProvider();
         TreeData<MetadataTreeGridHelper> metadataData = metadataDataProvider.getTreeData();
+        metadataData.clear();
 
         for(Class<IHopMetadata> metadataClass : metadataClasses){
             try {
@@ -373,5 +377,45 @@ public class MetadataPerspective extends BasePerspective implements ILeanPerspec
         return leanGuiLayout.getVariables();
     }
 
+    @Override
+    public boolean remove(ILeanFileTypeHandler typeHandler){
+        if(typeHandler instanceof MetadataEditor){
+            MetadataEditor<?> editor = (MetadataEditor<?>)typeHandler;
+            if(editor.isCloseable()){
+                editorsTabsMap.remove(editor);
+
+                // remove from metadataTabs
+            }
+        }
+        return false;
+    }
+
+    public MetadataEditor<?> getActiveEditor(){
+        if(metadataTabs.getSelectedTab() == null){
+            return null;
+        }
+        return (MetadataEditor<?>) editorsTabsMap.get(metadataTabs.getSelectedTab());
+    }
+
+    @Override
+    public ILeanFileTypeHandler getActiveFileTypeHandler() {
+        MetadataEditor<?> editor = getActiveEditor();
+        if(editor != null){
+            return editor;
+        }
+        return null;
+    }
+
+    @Override
+    public void setActiveFileTypeHandler(IHopFileTypeHandler activeFileTypeHandler) {
+        if(activeFileTypeHandler instanceof MetadataEditor){
+            this.setActiveEditor((MetadataEditor<?>) activeFileTypeHandler);
+        }
+    }
+
+    @Override
+    public List<IHopFileType> getSupportedHopFileTypes() {
+        return Arrays.asList(metadataFileType);
+    }
 
 }

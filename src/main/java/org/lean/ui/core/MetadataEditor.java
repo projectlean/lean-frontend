@@ -12,11 +12,11 @@ import org.apache.hop.metadata.api.HopMetadata;
 import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
 import org.apache.hop.ui.core.dialog.ErrorDialog;
-import org.apache.hop.ui.core.metadata.MetadataFileTypeHandler;
 import org.eclipse.swt.widgets.Composite;
 import org.lean.ui.core.gui.GuiResource;
 import org.lean.ui.core.metadata.IMetadataEditor;
 import org.lean.ui.core.metadata.MetadataEditorDialog;
+import org.lean.ui.core.metadata.MetadataFileTypeHandler;
 import org.lean.ui.core.metadata.MetadataManager;
 import org.lean.ui.plugins.perspective.metadata.MetadataPerspective;
 import org.lean.ui.util.VaadinSvgImageUtil;
@@ -93,7 +93,7 @@ public abstract class MetadataEditor<T extends IHopMetadata> extends MetadataFil
         return title;
     }
 
-    protected void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 

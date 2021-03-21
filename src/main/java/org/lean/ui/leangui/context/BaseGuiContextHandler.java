@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lean.ui.context;
+package org.lean.ui.leangui.context;
 
 import org.apache.hop.core.gui.plugin.GuiRegistry;
 import org.apache.hop.core.gui.plugin.action.GuiAction;

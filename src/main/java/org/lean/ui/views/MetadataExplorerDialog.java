@@ -262,7 +262,7 @@ public class MetadataExplorerDialog {
             Class<IHopMetadata> metadataClass = metadataProvider.getMetadataClassForKey(activeObjectKey);
             MetadataManager<IHopMetadata> manager =
                     new MetadataManager<>(
-                            leanGuiLayout, null, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
+                            leanGuiLayout, leanGuiLayout.getVariables(), metadataProvider, metadataClass);
             return manager;
         } catch (Exception e) {
             new ErrorDialog(
@@ -294,7 +294,9 @@ public class MetadataExplorerDialog {
             image = "ui/images/edit.svg")
     public void editMetadata() {
         MetadataManager<IHopMetadata> manager = getActiveMetadataManger();
+        manager.editMetadata(activeObjectName);
 /*
+        refreshTree();
         if (manager != null && manager.editMetadata(activeObjectName)) {
             refreshTree();
         }

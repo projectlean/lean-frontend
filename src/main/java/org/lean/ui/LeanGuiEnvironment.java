@@ -2,6 +2,7 @@ package org.lean.ui;
 
 import org.apache.hop.core.action.GuiContextAction;
 import org.apache.hop.core.exception.HopException;
+import org.apache.hop.core.exception.HopPluginException;
 import org.apache.hop.core.gui.plugin.GuiPluginType;
 import org.apache.hop.core.gui.plugin.key.GuiKeyboardShortcut;
 import org.apache.hop.core.gui.plugin.key.GuiOsxKeyboardShortcut;
@@ -12,6 +13,9 @@ import org.apache.hop.core.search.SearchableAnalyserPluginType;
 import org.lean.core.gui.plugin.GuiRegistry;
 import org.lean.core.gui.plugin.GuiWidgetElement;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
+import org.lean.ui.plugins.file.LeanFileTypePluginType;
+import org.lean.ui.plugins.file.LeanFileTypeRegistry;
+import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.perspective.LeanPerspectivePluginType;
 
 import java.lang.reflect.Field;
@@ -25,6 +29,7 @@ public class LeanGuiEnvironment extends LeanClientEnvironment{
         init(Arrays.asList(
                 GuiPluginType.getInstance(),
                 LeanPerspectivePluginType.getInstance(),
+                LeanFileTypePluginType.getInstance(),
                 SearchableAnalyserPluginType.getInstance()
             )
         );
@@ -110,19 +115,16 @@ public class LeanGuiEnvironment extends LeanClientEnvironment{
             // Get all the file handler plugins
             //
 
-// TODO: No Lean file types yet
-/*
             PluginRegistry registry = PluginRegistry.getInstance();
-            List<IPlugin> plugins = registry.getPlugins( HopFileTypePluginType.class );
+            List<IPlugin> plugins = registry.getPlugins( LeanFileTypePluginType.class );
             for ( IPlugin plugin : plugins ) {
                 try {
-                    IHopFileType hopFileTypeInterface = registry.loadClass( plugin, IHopFileType.class );
-                    HopFileTypeRegistry.getInstance().registerHopFile( hopFileTypeInterface );
+                    ILeanFileType leanFileType = registry.loadClass( plugin, ILeanFileType.class );
+                    LeanFileTypeRegistry.getInstance().registerLeanFile( leanFileType );
                 } catch ( HopPluginException e ) {
                     throw new HopException( "Unable to load plugin with ID '" + plugin.getIds()[ 0 ] + "' and type : " + plugin.getPluginType().getName(), e );
                 }
             }
-*/
         } catch ( Exception e ) {
             throw new HopException( "Error looking for Elements in GUI Plugins ", e );
         }

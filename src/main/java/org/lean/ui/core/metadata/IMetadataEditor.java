@@ -19,10 +19,4 @@ public interface IMetadataEditor {
     void save() throws HopException;
 
     void saveAs(String var1) throws HopException;
-/*
-
-    boolean setFocus();
-
-    void dispose();
-*/
 }

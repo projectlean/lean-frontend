@@ -28,9 +28,9 @@ import java.net.URL;
  */
 public class VaadinSvgImageUtil {
 
-    private static ILogChannel log = new LogChannel( "SwtSvgImageUtil" );
+    private static ILogChannel log = new LogChannel( "VaadinSvgImageUtil" );
 
-    private static final String NO_IMAGE = "images/no_image.svg";
+    private static final String NO_IMAGE = "./frontend/images/no_image.svg";
 
     private static FileObject base;
 

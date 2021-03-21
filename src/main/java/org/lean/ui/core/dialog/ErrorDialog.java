@@ -6,6 +6,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.apache.hop.core.Const;
@@ -27,7 +29,6 @@ public class ErrorDialog extends Dialog {
     private Text wDesc;
     private Button wOk, wDetails, wCancel;
 
-//    private SelectionAdapter lsDef;
     private PropsUi props;
 
     private boolean cancelled;
@@ -107,14 +108,6 @@ public class ErrorDialog extends Dialog {
     private void showErrorDialog(String title, String message, Exception exception, boolean showCancelButton) {
         this.props = PropsUi.getInstance();
 
-//        final Font largeFont = GuiResource.getInstance().getFontBold();
-//        final Color gray = GuiResource.getInstance().getColorDemoGray();
-
-//        FormLayout formLayout = new FormLayout();
-
-//        formLayout.marginWidth = Const.FORM_MARGIN;
-//        formLayout.marginHeight = Const.FORM_MARGIN;
-
         int margin = props.getMargin();
 
         // From transform line
@@ -131,7 +124,6 @@ public class ErrorDialog extends Dialog {
             text.append(message);
             wDesc = new Text(exMsgFunction.apply(text.toString()));
         }
-//        wDesc.setEditable(false);
         bodyLayout.add(wDesc);
 
         wOk = new Button();
@@ -156,7 +148,9 @@ public class ErrorDialog extends Dialog {
                     };
         }
 
-        buttonsLayout.add(buttons);
+        FlexLayout buttonWrapper = new FlexLayout(buttons);
+        buttonWrapper.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        buttonsLayout.add(buttonWrapper);
 
         // Add listeners
         wOk.addClickListener(e -> ok());
@@ -165,34 +159,7 @@ public class ErrorDialog extends Dialog {
         }
         wDetails.addClickListener(e -> showDetails(details.toString()));
 
-//        lsDef =
-//                new SelectionAdapter() {
-//                    public void widgetDefaultSelected(SelectionEvent e) {
-//                        ok();
-//                    }
-//                };
-//        wDesc.addSelectionListener(lsDef);
-
-        // Detect [X] or ALT-F4 or something that kills this window...
-//        shell.addShellListener(
-//                new ShellAdapter() {
-//                    public void shellClosed(ShellEvent e) {
-//                        ok();
-//                    }
-//                });
-        // Clean up used resources!
-
-//        BaseTransformDialog.setSize(shell);
-
-        // Set the focus on the "OK" button
-//        wOk.setFocus();
-
         this.open();
-//        while (!shell.isDisposed()) {
-//            if (!display.readAndDispatch()) {
-//                display.sleep();
-//            }
-//        }
     }
 
     @VisibleForTesting

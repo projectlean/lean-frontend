@@ -1,6 +1,7 @@
 package org.lean.ui.plugins.perspective;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.apache.hop.core.plugins.Plugin;
 import org.apache.hop.core.plugins.PluginRegistry;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
@@ -9,6 +10,7 @@ import org.lean.ui.layout.LeanGuiLayout;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+//@VaadinSessionScope
 public class LeanPerspectiveManager {
 
     private LeanGuiLayout leanGuiLayout;
@@ -38,7 +40,15 @@ public class LeanPerspectiveManager {
     public void setActivePerspective(ILeanPerspective perspective){
         for(ILeanPerspective leanPerspective : perspectivesMap.values()){
             if(leanPerspective.getClass().equals(perspective.getClass())) {
-                ((Component) perspective).setVisible(true);
+                // TODO: cycle through perspectives instead of removing and re-adding
+                leanGuiLayout.mainBody.removeAll();
+                leanGuiLayout.mainBody.add((Component) perspective);
+                ((Component)perspective).setVisible(true);
+                activePerspective = perspective;
+
+
+
+
 //            }else{
 //                ((Component) perspective).setVisible(false);
 /*
@@ -60,9 +70,11 @@ public class LeanPerspectiveManager {
         }
     }
 
+/*
     public ILeanPerspective getActivePerspective(){
         return activePerspective;
     }
+*/
 
     public boolean isActivePerspective(ILeanPerspective perspective){
         if(perspective != null){
@@ -75,7 +87,7 @@ public class LeanPerspectiveManager {
 
     public ILeanPerspective findPerspective(Class<? extends ILeanPerspective> perspectiveClass){
         for(ILeanPerspective perspective : perspectivesMap.values()){
-            if(perspective.getPluginId().equals(perspectiveClass)){
+            if(perspective.getClass().equals(perspectiveClass)){
                 return perspective;
             }
         }

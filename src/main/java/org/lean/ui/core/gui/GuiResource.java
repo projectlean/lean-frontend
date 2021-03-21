@@ -1,20 +1,11 @@
 package org.lean.ui.core.gui;
 
 import com.vaadin.flow.component.html.Image;
-import org.apache.hop.core.SwtUniversalImage;
 import org.apache.hop.core.logging.ILogChannel;
 import org.apache.hop.core.logging.LogChannel;
-import org.apache.hop.core.plugins.ActionPluginType;
 import org.apache.hop.core.plugins.IPluginTypeListener;
 import org.apache.hop.core.plugins.PluginRegistry;
-import org.apache.hop.core.plugins.TransformPluginType;
-import org.apache.hop.ui.hopgui.ISingletonProvider;
-import org.apache.hop.ui.hopgui.ImplementationLoader;
-import org.apache.hop.ui.util.SwtSvgImageUtil;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
 import org.lean.core.VaadinUniversalImage;
-import org.lean.core.gui.plugin.GuiRegistry;
 import org.lean.presentation.component.type.LeanComponentPluginType;
 import org.lean.presentation.connector.type.LeanConnectorPluginType;
 import org.lean.ui.core.ConstUi;
@@ -35,6 +26,10 @@ public class GuiResource {
     private static ILogChannel log = LogChannel.UI;
 
     private double zoomFactor;
+
+    private VaadinUniversalImage imageFile;
+    private VaadinUniversalImage imageFolder;
+    private VaadinUniversalImage imageVariable;
 
     private Map<String, Image> imageMap;
 
@@ -73,16 +68,6 @@ public class GuiResource {
 
     }
 
-/*
-    private static final ISingletonProvider PROVIDER;
-    static {
-        PROVIDER = (ISingletonProvider) ImplementationLoader.newInstance( GuiResource.class );
-    }
-    public static final GuiResource getInstance() {
-        return (GuiResource) PROVIDER.getInstanceInternal();
-    }
-*/
-
     public static GuiResource getInstance(){
         if(guiResource == null){
             guiResource = new GuiResource();
@@ -92,7 +77,10 @@ public class GuiResource {
 
 
     private void getResources() {
+
         PropsUi props = PropsUi.getInstance();
+        loadCommonImages();
+
     }
 
     /**
@@ -169,7 +157,33 @@ public class GuiResource {
         return image;
     }
 
+    private void loadCommonImages(){
+        imageFile = VaadinSvgImageUtil.getImageAsResource("ui/images/file.svg");
+        imageFolder = VaadinSvgImageUtil.getImageAsResource("ui/images/folder.svg");
+        imageVariable = VaadinSvgImageUtil.getImageAsResource("ui/images/variable.svg");
+
+    }
+
     private Image getZoomedImage(VaadinUniversalImage universalImage, int width, int height) {
         return universalImage.getAsBitmapForSize( (int)(zoomFactor*width), (int)(zoomFactor*height) );
     }
+
+    public Image getImageVariable(){
+        return getZoomedImage(imageVariable, 10, 10);
+    }
+
+    /**
+     * @return the imageArrow
+     */
+    public Image getImageFolder() {
+        return getZoomedImage( imageFolder, ConstUi.SMALL_ICON_SIZE, ConstUi.SMALL_ICON_SIZE );
+    }
+
+    /**
+     * @return the imageFile
+     */
+    public Image getImageFile() {
+        return getZoomedImage( imageFile, ConstUi.SMALL_ICON_SIZE, ConstUi.SMALL_ICON_SIZE );
+    }
+
 }

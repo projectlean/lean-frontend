@@ -23,7 +23,6 @@ import org.apache.hop.core.plugins.PluginRegistry;
 import org.apache.hop.i18n.BaseMessages;
 import org.apache.xmlgraphics.xmp.Metadata;
 import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
-import org.eclipse.persistence.annotations.TenantTableDiscriminator;
 import org.lean.core.LeanDatabaseConnection;
 import org.lean.core.exception.LeanException;
 import org.lean.ui.core.MetadataEditor;
@@ -36,7 +35,7 @@ import javax.xml.ws.handler.HandlerResolver;
 import java.util.Arrays;
 import java.util.List;
 
-public class LeanDatabaseConnectionEditor extends MetadataEditor<LeanDatabaseConnection> implements IMetadataEditor {
+public class LeanDatabaseConnectionEditor extends MetadataEditor<LeanDatabaseConnection> /*implements IMetadataEditor*/ {
 
     private static final Class<?> PKG = LeanDatabaseConnectionEditor.class;
 
@@ -51,11 +50,24 @@ public class LeanDatabaseConnectionEditor extends MetadataEditor<LeanDatabaseCon
 
     @Override
     public void setWidgetsContent() {
+        LeanDatabaseConnection meta = this.getMetadata();
 
+        connTfName.setValue(meta.getName());
+        connCbType.setValue(meta.getDatabaseTypeCode());
+        connTfHostname.setValue(meta.getHostname());
+        connTfPort.setValue(meta.getPort());
+        connTfUsername.setValue(meta.getUsername());
+        connPwPassword.setValue(meta.getPassword());
     }
 
     @Override
     public void getWidgetsContent(LeanDatabaseConnection meta) {
+        meta.setName(connTfName.getValue());
+        meta.setDatabaseTypeCode(connCbType.getValue());
+        meta.setHostname(connTfHostname.getValue());
+        meta.setPort(connTfPort.getValue());
+        meta.setUsername(connTfUsername.getValue());
+        meta.setPassword(connPwPassword.getValue());
 
     }
 
@@ -121,12 +133,6 @@ public class LeanDatabaseConnectionEditor extends MetadataEditor<LeanDatabaseCon
 
             String title = success ? BaseMessages.getString( PKG, "DatabaseDialog.DatabaseConnectionTestSuccess.title" )
                     : BaseMessages.getString( PKG, "DatabaseDialog.DatabaseConnectionTest.title" );
-//            if ( success && message.contains( Const.CR ) ) {
-//                message.replaceAll(Const.CR, "<br />");
-//                message = message.substring( 0, message.indexOf( Const.CR ) )
-//                        + "<br />" + message.substring( message.indexOf( Const.CR ) );
-//                message = message.substring( 0, message.lastIndexOf( Const.CR ) );
-//            }
             ShowMessageDialog msgDialog = new ShowMessageDialog(VaadinIcon.INFO.ordinal() | VaadinIcon.CHECK.ordinal(),
                     title, message, message.length() > 300 );
             msgDialog.setType( success ? Const.SHOW_MESSAGE_DIALOG_DB_TEST_SUCCESS
