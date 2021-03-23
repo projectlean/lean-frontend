@@ -70,11 +70,9 @@ public class LeanPerspectiveManager {
         }
     }
 
-/*
     public ILeanPerspective getActivePerspective(){
         return activePerspective;
     }
-*/
 
     public boolean isActivePerspective(ILeanPerspective perspective){
         if(perspective != null){

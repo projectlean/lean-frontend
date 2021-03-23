@@ -16,15 +16,16 @@ import org.lean.ui.layout.LeanGuiLayout;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.file.ILeanFileTypeHandler;
-import org.lean.ui.plugins.perspective.presentation.editor.connector.ConnectorHandler;
-import org.lean.ui.plugins.perspective.presentation.editor.layout.LayoutHandler;
-import org.lean.ui.plugins.perspective.presentation.editor.theme.ThemeHandler;
+import org.lean.ui.plugins.file.presentation.LeanPresentationFileType;
+import org.lean.ui.plugins.perspective.presentation.editor.connector.ConnectorEditor;
+import org.lean.ui.plugins.perspective.presentation.editor.layout.LayoutEditor;
+import org.lean.ui.plugins.perspective.presentation.editor.theme.ThemeEditor;
 
 import java.util.List;
 import java.util.Map;
 
 @GuiPlugin(description = "The presentation handler takes care of viewing and editing presentations")
-public class PresentationHandler extends Composite<HorizontalLayout> implements ILeanFileTypeHandler {
+public class PresentationEditor extends Composite<HorizontalLayout> implements ILeanFileTypeHandler {
 
     public static final String GUI_PRESHANDLER_TOOLBAR_PARENT_ID = "Presentation-Handler-Toolbar";
     public static final String TOOLBAR_PRES_VIEW = "Presentation-Handler-View";
@@ -41,17 +42,20 @@ public class PresentationHandler extends Composite<HorizontalLayout> implements 
 
     public VerticalLayout presentationNavBar;
 
-    private ConnectorHandler connectorHandler;
-    private LayoutHandler layoutHandler;
-    private ThemeHandler themeHandler;
+    private ConnectorEditor connectorEditor;
+    private LayoutEditor layoutEditor;
+    private ThemeEditor themeEditor;
 
     private LeanPresentation presentation;
+    private LeanPresentationFileType fileType;
 
-    public PresentationHandler(LeanGuiLayout leanGuiLayout, LeanPresentation presentation){
+    public PresentationEditor(LeanGuiLayout leanGuiLayout, LeanPresentation presentation){
 
         this.leanGuiLayout = leanGuiLayout;
         this.leanGuiLayoutId = leanGuiLayout.getLeanGuiLayoutId();
         this.presentation = presentation;
+
+        fileType = new LeanPresentationFileType();
 
         this.getContent().setId("presentation-handler");
         this.getContent().setSizeFull();
@@ -63,22 +67,22 @@ public class PresentationHandler extends Composite<HorizontalLayout> implements 
 
         createToolbar();
 
-        connectorHandler = new ConnectorHandler(leanGuiLayout, presentation);
-        connectorHandler.setId("connector-handler");
-        connectorHandler.setSizeFull();
-        connectorHandler.setVisible(false);
+        connectorEditor = new ConnectorEditor(leanGuiLayout, presentation);
+        connectorEditor.setId("connector-handler");
+        connectorEditor.setSizeFull();
+        connectorEditor.setVisible(false);
 
-        layoutHandler = new LayoutHandler();
-        layoutHandler.setId("layout-handler");
-        layoutHandler.setSizeFull();
-        layoutHandler.setVisible(false);
+        layoutEditor = new LayoutEditor();
+        layoutEditor.setId("layout-handler");
+        layoutEditor.setSizeFull();
+        layoutEditor.setVisible(false);
 
-        themeHandler = new ThemeHandler();
-        themeHandler.setId("theme-handler");
-        themeHandler.setSizeFull();
-        themeHandler.setVisible(false);
+        themeEditor = new ThemeEditor();
+        themeEditor.setId("theme-handler");
+        themeEditor.setSizeFull();
+        themeEditor.setVisible(false);
 
-        getContent().add(presentationNavBar, connectorHandler, layoutHandler, themeHandler);
+        getContent().add(presentationNavBar, connectorEditor, layoutEditor, themeEditor);
 
     }
 
@@ -106,7 +110,7 @@ public class PresentationHandler extends Composite<HorizontalLayout> implements 
 
     @Override
     public ILeanFileType getFileType() {
-        return null;
+        return fileType;
     }
 
     @Override
@@ -267,7 +271,7 @@ public class PresentationHandler extends Composite<HorizontalLayout> implements 
             image = "frontend/images/connector.svg"
     )
     public void onConnector(){
-        toggleView(connectorHandler);
+        toggleView(connectorEditor);
     }
 
     @GuiToolbarElement(
@@ -277,7 +281,7 @@ public class PresentationHandler extends Composite<HorizontalLayout> implements 
             image = "frontend/images/component.svg"
     )
     public void onComponent(){
-        toggleView(layoutHandler);
+        toggleView(layoutEditor);
     }
 
     @GuiToolbarElement(
@@ -287,23 +291,23 @@ public class PresentationHandler extends Composite<HorizontalLayout> implements 
             image = "frontend/images/theme.svg"
     )
     public void onTheme(){
-        toggleView(themeHandler);
+        toggleView(themeEditor);
     }
 
 
     public void toggleView(HorizontalLayout layout){
-        if(layout instanceof ConnectorHandler){
-            connectorHandler.setVisible(true);
-            layoutHandler.setVisible(false);
-            themeHandler.setVisible(false);
-        }else if(layout instanceof LayoutHandler){
-            connectorHandler.setVisible(false);
-            layoutHandler.setVisible(true);
-            themeHandler.setVisible(false);
-        }else if(layout instanceof ThemeHandler){
-            connectorHandler.setVisible(false);
-            layoutHandler.setVisible(false);
-            themeHandler.setVisible(true);
+        if(layout instanceof ConnectorEditor){
+            connectorEditor.setVisible(true);
+            layoutEditor.setVisible(false);
+            themeEditor.setVisible(false);
+        }else if(layout instanceof LayoutEditor){
+            connectorEditor.setVisible(false);
+            layoutEditor.setVisible(true);
+            themeEditor.setVisible(false);
+        }else if(layout instanceof ThemeEditor){
+            connectorEditor.setVisible(false);
+            layoutEditor.setVisible(false);
+            themeEditor.setVisible(true);
         }
 
     }

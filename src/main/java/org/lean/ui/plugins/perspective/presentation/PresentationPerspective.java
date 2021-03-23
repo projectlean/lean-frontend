@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -17,12 +16,15 @@ import org.lean.presentation.LeanPresentation;
 import org.lean.ui.core.ConstUi;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
+import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.file.ILeanFileTypeHandler;
+import org.lean.ui.plugins.file.presentation.LeanPresentationFileType;
 import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
 import org.lean.ui.plugins.perspective.LeanPerspectivePlugin;
 import org.lean.ui.plugins.perspective.TabItemHandler;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,15 +46,17 @@ public class PresentationPerspective extends LeanPerspectiveBase implements ILea
 //    private Tab placeholderTab;
     private TabItemHandler activeItem;
     private Div presentationHolderDiv;
-    private Map<Tab, PresentationHandler> tabsToPages;
+    private Map<Tab, PresentationEditor> tabsToPages;
 
+    private final LeanPresentationFileType presentationFileType;
 
     public PresentationPerspective(){
         super();
+        setId("presentation-perspective");
+
+        presentationFileType = new LeanPresentationFileType();
 
         items = new CopyOnWriteArrayList<>();
-
-        setId("presentation-perspective");
 
         presentationTabs = new Tabs();
         presentationTabs.setHeight(ConstUi.HBAR_HEIGHT);
@@ -106,17 +110,23 @@ public class PresentationPerspective extends LeanPerspectiveBase implements ILea
 
     @Override
     public ILeanFileTypeHandler getActiveFileTypeHandler() {
+        PresentationEditor editor = getActiveEditor();
+        if(editor != null){
+            return editor;
+        }
         return null;
     }
 
     @Override
-    public void setActiveFileTypeHandler(IHopFileTypeHandler activeFileTypeHandler) {
-
+    public void setActiveFileTypeHandler(ILeanFileTypeHandler activeFileTypeHandler) {
+        if(activeFileTypeHandler instanceof PresentationEditor){
+            this.setActiveEditor((PresentationEditor)activeFileTypeHandler);
+        }
     }
 
     @Override
-    public List<IHopFileType> getSupportedHopFileTypes() {
-        return null;
+    public List<ILeanFileType> getSupportedLeanFileTypes() {
+        return Arrays.asList(presentationFileType);
     }
 
     @Override
@@ -133,15 +143,15 @@ public class PresentationPerspective extends LeanPerspectiveBase implements ILea
 
         Tab newTab = new Tab(presentation.getName());
 
-        PresentationHandler presentationHandler = new PresentationHandler(leanGuiLayout, presentation);
-        presentationHolderDiv.add(presentationHandler);
+        PresentationEditor presentationEditor = new PresentationEditor(leanGuiLayout, presentation);
+        presentationHolderDiv.add(presentationEditor);
 
-        Button closeButton = new Button(VaadinIcon.CLOSE.create(), click -> closePresentation(newTab, presentationHandler));
+        Button closeButton = new Button(VaadinIcon.CLOSE.create(), click -> closePresentation(newTab, presentationEditor));
         newTab.add(closeButton);
 
-        presentationHolderDiv.add(presentationHandler);
+        presentationHolderDiv.add(presentationEditor);
 
-        tabsToPages.put(newTab, presentationHandler);
+        tabsToPages.put(newTab, presentationEditor);
         presentationTabs.add(newTab);
         presentationTabs.setSelectedTab(newTab);
 
@@ -151,15 +161,15 @@ public class PresentationPerspective extends LeanPerspectiveBase implements ILea
         tabMenu.addItem("Close other tabs", e -> {});
         tabMenu.addItem("Close tabs to the left", e -> {});
         tabMenu.addItem("Close tabs to the right", e -> {});
-        tabMenu.addItem("Close tab", e -> closePresentation(newTab, presentationHandler));
+        tabMenu.addItem("Close tab", e -> closePresentation(newTab, presentationEditor));
 
-        return presentationHandler;
+        return presentationEditor;
     }
 
-    private void closePresentation(Tab presentationTab, PresentationHandler presentationHandler){
+    private void closePresentation(Tab presentationTab, PresentationEditor presentationEditor){
         presentationTabs.remove(presentationTab);
-        presentationHolderDiv.remove(presentationHandler);
-        tabsToPages.remove(presentationTab, presentationHandler);
+        presentationHolderDiv.remove(presentationEditor);
+        tabsToPages.remove(presentationTab, presentationEditor);
     }
 
     public TabItemHandler findTabItemHandlerWithFilename(String filename){
@@ -177,5 +187,20 @@ public class PresentationPerspective extends LeanPerspectiveBase implements ILea
     public void switchToTab(TabItemHandler tabItemHandler){
         presentationTabs.setSelectedTab(tabItemHandler.getTabItem());
         activeItem = tabItemHandler;
+    }
+
+    public void setActiveEditor(PresentationEditor editor){
+        for(Tab editorTab : tabsToPages.keySet()){
+            if(tabsToPages.get(editorTab).equals(editor)){
+                presentationTabs.setSelectedTab(editorTab);
+            }
+        }
+    }
+
+    public PresentationEditor getActiveEditor(){
+        if(presentationTabs.getSelectedTab() == null){
+            return null;
+        }
+        return tabsToPages.get(presentationTabs.getSelectedTab());
     }
 }

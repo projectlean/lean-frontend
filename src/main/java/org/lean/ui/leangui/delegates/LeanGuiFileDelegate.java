@@ -19,7 +19,7 @@ public class LeanGuiFileDelegate {
     }
 
     public ILeanFileTypeHandler getActiveFileTypeHandler(){
-        ILeanFileTypeHandler typeHandler = leanGuiLayout.getActivePerspective().getActiveFileTypeHandler();
+        ILeanFileTypeHandler typeHandler = leanGuiLayout.getPerspectiveManager().getActivePerspective().getActiveFileTypeHandler();
         return typeHandler;
     }
 
@@ -111,7 +111,7 @@ public class LeanGuiFileDelegate {
 
     public boolean fileClose() {
         try {
-            ILeanPerspective perspective = leanGuiLayout.getActivePerspective();
+            ILeanPerspective perspective = leanGuiLayout.getPerspectiveManager().getActivePerspective();
             ILeanFileTypeHandler typeHandler = getActiveFileTypeHandler();
             ILeanFileType fileType = typeHandler.getFileType();
             if (fileType.hasCapability(ILeanFileType.CAPABILITY_CLOSE)) {

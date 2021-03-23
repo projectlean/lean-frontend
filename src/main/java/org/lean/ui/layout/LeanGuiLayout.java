@@ -64,7 +64,7 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
     public MainBody mainBody;
 
     public static LeanPerspectiveManager perspectiveManager;
-    private ILeanPerspective activePerspective;
+//    private ILeanPerspective activePerspective;
 
     private IHopMetadataProvider metadataProvider;
 
@@ -194,7 +194,7 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
             Button perspectiveButton = new Button(perspectiveIcon);
             perspectiveButton.addClickListener(e -> {
                 perspectiveManager.setActivePerspective(perspective);
-                activePerspective = perspective;
+//                activePerspective = perspective;
             });
             mainBody.add(perspectiveComponent);
             perspectivesToolbar.add(perspectiveButton);
@@ -281,9 +281,11 @@ public class LeanGuiLayout extends Composite<Div> implements RouterLayout, IActi
      *
      * @return value of activePerspective
      */
+/*
     public ILeanPerspective getActivePerspective() {
         return activePerspective;
     }
+*/
 
     public LeanPerspectiveManager getPerspectiveManager(){
         return perspectiveManager;

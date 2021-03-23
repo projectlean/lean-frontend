@@ -8,6 +8,7 @@ import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.layout.LeanGuiLayout;
+import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.file.ILeanFileTypeHandler;
 import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
@@ -64,12 +65,12 @@ public class ConsolePerspective extends LeanPerspectiveBase implements ILeanPers
     }
 
     @Override
-    public void setActiveFileTypeHandler(IHopFileTypeHandler activeFileTypeHandler) {
+    public void setActiveFileTypeHandler(ILeanFileTypeHandler activeFileTypeHandler) {
 
     }
 
     @Override
-    public List<IHopFileType> getSupportedHopFileTypes() {
+    public List<ILeanFileType> getSupportedLeanFileTypes() {
         return null;
     }
 
