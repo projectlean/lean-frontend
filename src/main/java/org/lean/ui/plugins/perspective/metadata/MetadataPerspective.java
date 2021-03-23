@@ -22,12 +22,13 @@ import org.apache.hop.metadata.api.IHopMetadata;
 import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.metadata.api.IHopMetadataSerializer;
 import org.apache.hop.metadata.util.HopMetadataUtil;
-import org.apache.hop.ui.core.metadata.MetadataFileType;
+//import org.apache.hop.ui.core.metadata.MetadataFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.apache.hop.ui.hopgui.file.empty.EmptyFileType;
 import org.lean.core.gui.plugin.toolbar.GuiToolbarElement;
 import org.lean.core.metadata.LeanMetadataUtil;
+import org.lean.ui.core.metadata.MetadataFileType;
 import org.lean.ui.leangui.context.IGuiContextHandler;
 import org.lean.ui.core.MetadataEditor;
 import org.lean.ui.core.PropsUi;
@@ -36,6 +37,7 @@ import org.lean.ui.core.gui.GuiToolbarWidgets;
 import org.lean.ui.core.gui.vaadin.components.toolbar.LeanToolbar;
 import org.lean.ui.core.metadata.MetadataManager;
 import org.lean.ui.layout.LeanGuiLayout;
+import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.file.ILeanFileTypeHandler;
 import org.lean.ui.plugins.perspective.LeanPerspectiveBase;
 import org.lean.ui.plugins.perspective.ILeanPerspective;
@@ -407,14 +409,14 @@ public class MetadataPerspective extends LeanPerspectiveBase implements ILeanPer
     }
 
     @Override
-    public void setActiveFileTypeHandler(IHopFileTypeHandler activeFileTypeHandler) {
+    public void setActiveFileTypeHandler(ILeanFileTypeHandler activeFileTypeHandler) {
         if(activeFileTypeHandler instanceof MetadataEditor){
             this.setActiveEditor((MetadataEditor<?>) activeFileTypeHandler);
         }
     }
 
     @Override
-    public List<IHopFileType> getSupportedHopFileTypes() {
+    public List<ILeanFileType> getSupportedLeanFileTypes() {
         return Arrays.asList(metadataFileType);
     }
 

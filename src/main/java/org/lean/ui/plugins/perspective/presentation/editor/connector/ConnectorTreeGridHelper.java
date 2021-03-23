@@ -10,13 +10,13 @@ import org.lean.ui.core.ConstUi;
 
 public class ConnectorTreeGridHelper {
 
-    private ConnectorHandler connectorHandler;
+    private ConnectorEditor connectorEditor;
     private ILeanConnector connector;
     private String displayName, image;
     private Image connectorImage;
 
-    public ConnectorTreeGridHelper(ConnectorHandler connectorHandler, String displayName, String image, ILeanConnector connector){
-        this.connectorHandler = connectorHandler;
+    public ConnectorTreeGridHelper(ConnectorEditor connectorEditor, String displayName, String image, ILeanConnector connector){
+        this.connectorEditor = connectorEditor;
         this.image = image;
         this.connector = connector;
         this.displayName = displayName;
@@ -36,7 +36,7 @@ public class ConnectorTreeGridHelper {
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setTarget(connectorLayout);
         contextMenu.setOpenOnClick(true);
-        contextMenu.addItem("New", e -> connectorHandler.newConnector(connector, displayName));
+        contextMenu.addItem("New", e -> connectorEditor.newConnector(connector, displayName));
 
         if(StringUtils.isNotEmpty(image)){
             connectorLayout.add(connectorImage);

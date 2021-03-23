@@ -5,6 +5,7 @@ import org.apache.hop.ui.hopgui.file.IHopFileType;
 import org.apache.hop.ui.hopgui.file.IHopFileTypeHandler;
 import org.lean.ui.leangui.context.IActionContextHandlersProvider;
 import org.lean.ui.layout.LeanGuiLayout;
+import org.lean.ui.plugins.file.ILeanFileType;
 import org.lean.ui.plugins.file.ILeanFileTypeHandler;
 
 import java.util.List;
@@ -33,14 +34,14 @@ public interface ILeanPerspective extends IActionContextHandlersProvider {
      *
      * @param activeFileTypeHandler
      */
-    void setActiveFileTypeHandler( IHopFileTypeHandler activeFileTypeHandler );
+    void setActiveFileTypeHandler( ILeanFileTypeHandler activeFileTypeHandler );
 
     /**
      * Get a list of supported file types for this perspective
      *
      * @return The list of supported file types
      */
-    List<IHopFileType> getSupportedHopFileTypes();
+    List<ILeanFileType> getSupportedLeanFileTypes();
 
     /**
      * Remove this file type handler from the perspective

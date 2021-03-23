@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @GuiPlugin(description = "The Connector handles all connectors for a presentation.")
-public class ConnectorHandler extends HorizontalLayout {
+public class ConnectorEditor extends HorizontalLayout {
 
     public static final String GUI_CONNECTOR_TOOLBAR_PARENT_ID = "Connectors-toolbar";
     public static final String GUI_CONNECTOR_EDIT = "Connector-edit";
@@ -59,7 +59,7 @@ public class ConnectorHandler extends HorizontalLayout {
 
     private LeanPresentation presentation;
 
-    public ConnectorHandler(LeanGuiLayout leanGuiLayout, LeanPresentation presentation){
+    public ConnectorEditor(LeanGuiLayout leanGuiLayout, LeanPresentation presentation){
         this.leanGuiLayout = leanGuiLayout;
         this.leanGuiLayoutId = leanGuiLayout.getLeanGuiLayoutId();
         this.presentation = presentation;
